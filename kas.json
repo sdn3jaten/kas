@@ -1,412 +1,859 @@
 {
   "members": [
-    { 
-      "nama": "Almaira Aisha Tungga Prasetya", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-15" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-15" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-15" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-15" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-15" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-15" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-15" }, 
-      "februari": { "amount": "Rp15.000", "date": "2025-02-15" }, 
-      "maret": { "amount": "Rp15.000", "date": "2025-03-15" }, 
-      "april": { "amount": "Rp15.000", "date": "2025-04-15" }, 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp150.000", 
-      "kurang": "Rp30.000" 
+    {
+      "nama": "Almaira Aisha Tungga Prasetya",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-15"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-15"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-15"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-15"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-15"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-15"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-15"
+      },
+      "februari": {
+        "amount": "Rp15.000",
+        "date": "2025-02-15"
+      },
+      "maret": {
+        "amount": "Rp15.000",
+        "date": "2025-03-15"
+      },
+      "april": {
+        "amount": "Rp15.000",
+        "date": "2025-04-15"
+      },
+      "mei": "",
+      "juni": "",
+      "total": "Rp150.000",
+      "kurang": "Rp30.000"
     },
-    { 
-      "nama": "Alvin Danendra Alfaridzy", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-20" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-20" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-20" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-20" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-20" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-20" }, 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp90.000", 
-      "kurang": "Rp90.000" 
+    {
+      "nama": "Alvin Danendra Alfaridzy",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-20"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-20"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-20"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-20"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-20"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-20"
+      },
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp90.000",
+      "kurang": "Rp90.000"
     },
-    { 
-      "nama": "Ariella Sava Callandra Putri", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-10" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-10" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-10" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-10" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Ariella Sava Callandra Putri",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-10"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-10"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-10"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-10"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Davin Kaysan Fabrio", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-05" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-05" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-05" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-05" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-05" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-05" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-05" }, 
-      "februari": { "amount": "Rp15.000", "date": "2025-02-05" }, 
-      "maret": { "amount": "Rp15.000", "date": "2025-03-05" }, 
-      "april": { "amount": "Rp15.000", "date": "2025-04-05" }, 
-      "mei": { "amount": "Rp15.000", "date": "2025-05-05" }, 
-      "juni": { "amount": "Rp15.000", "date": "2025-06-05" }, 
-      "total": "Rp180.000", 
-      "kurang": "Rp0" 
+    {
+      "nama": "Davin Kaysan Fabrio",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-05"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-05"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-05"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-05"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-05"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-05"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-05"
+      },
+      "februari": {
+        "amount": "Rp15.000",
+        "date": "2025-02-05"
+      },
+      "maret": {
+        "amount": "Rp15.000",
+        "date": "2025-03-05"
+      },
+      "april": {
+        "amount": "Rp15.000",
+        "date": "2025-04-05"
+      },
+      "mei": {
+        "amount": "Rp15.000",
+        "date": "2025-05-05"
+      },
+      "juni": {
+        "amount": "Rp15.000",
+        "date": "2025-06-05"
+      },
+      "total": "Rp180.000",
+      "kurang": "Rp0"
     },
-    { 
-      "nama": "Davin Leonzio Prakoso", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-12" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-12" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-12" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-12" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Davin Leonzio Prakoso",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-12"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-12"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-12"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-12"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Dhanievga Rizqy Valenro Widyan", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-18" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-18" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-18" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-18" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Dhanievga Rizqy Valenro Widyan",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-18"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-18"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-18"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-18"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Estiana Prada Ariyanti", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-22" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-22" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-22" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-22" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Estiana Prada Ariyanti",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-22"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-22"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-22"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-22"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Fahdia Azzarine Binar Andhari", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-08" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-08" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-08" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-08" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-08" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-08" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-08" }, 
-      "februari": { "amount": "Rp15.000", "date": "2025-02-08" }, 
-      "maret": { "amount": "Rp15.000", "date": "2025-03-08" }, 
-      "april": { "amount": "Rp15.000", "date": "2025-04-08" }, 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp150.000", 
-      "kurang": "Rp30.000" 
+    {
+      "nama": "Fahdia Azzarine Binar Andhari",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-08"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-08"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-08"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-08"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-08"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-08"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-08"
+      },
+      "februari": {
+        "amount": "Rp15.000",
+        "date": "2025-02-08"
+      },
+      "maret": {
+        "amount": "Rp15.000",
+        "date": "2025-03-08"
+      },
+      "april": {
+        "amount": "Rp15.000",
+        "date": "2025-04-08"
+      },
+      "mei": "",
+      "juni": "",
+      "total": "Rp150.000",
+      "kurang": "Rp30.000"
     },
-    { 
-      "nama": "Gracia Evelyn Eka Putri", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-03" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-03" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-03" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-03" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-03" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-03" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-03" }, 
-      "februari": { "amount": "Rp15.000", "date": "2025-02-03" }, 
-      "maret": { "amount": "Rp15.000", "date": "2025-03-03" }, 
-      "april": { "amount": "Rp15.000", "date": "2025-04-03" }, 
-      "mei": { "amount": "Rp15.000", "date": "2025-05-03" }, 
-      "juni": { "amount": "Rp15.000", "date": "2025-06-03" }, 
-      "total": "Rp180.000", 
-      "kurang": "Rp0" 
+    {
+      "nama": "Gracia Evelyn Eka Putri",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-03"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-03"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-03"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-03"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-03"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-03"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-03"
+      },
+      "februari": {
+        "amount": "Rp15.000",
+        "date": "2025-02-03"
+      },
+      "maret": {
+        "amount": "Rp15.000",
+        "date": "2025-03-03"
+      },
+      "april": {
+        "amount": "Rp15.000",
+        "date": "2025-04-03"
+      },
+      "mei": {
+        "amount": "Rp15.000",
+        "date": "2025-05-03"
+      },
+      "juni": {
+        "amount": "Rp15.000",
+        "date": "2025-06-03"
+      },
+      "total": "Rp180.000",
+      "kurang": "Rp0"
     },
-    { 
-      "nama": "Griselda Binar Euclea", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-25" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-25" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-25" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-25" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-25" }, 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp75.000", 
-      "kurang": "Rp105.000" 
+    {
+      "nama": "Griselda Binar Euclea",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-25"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-25"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-25"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-25"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-25"
+      },
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp75.000",
+      "kurang": "Rp105.000"
     },
-    { 
-      "nama": "Izdihar Alka Setiawan", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-01" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-01" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-01" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-01" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-01" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-01" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-01" }, 
-      "februari": { "amount": "Rp15.000", "date": "2025-02-01" }, 
-      "maret": { "amount": "Rp15.000", "date": "2025-03-01" }, 
-      "april": { "amount": "Rp15.000", "date": "2025-04-01" }, 
-      "mei": { "amount": "Rp15.000", "date": "2025-05-01" }, 
-      "juni": { "amount": "Rp15.000", "date": "2025-06-01" }, 
-      "total": "Rp180.000", 
-      "kurang": "Rp0" 
+    {
+      "nama": "Izdihar Alka Setiawan",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-01"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-01"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-01"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-01"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-01"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-01"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-01"
+      },
+      "februari": {
+        "amount": "Rp15.000",
+        "date": "2025-02-01"
+      },
+      "maret": {
+        "amount": "Rp15.000",
+        "date": "2025-03-01"
+      },
+      "april": {
+        "amount": "Rp15.000",
+        "date": "2025-04-01"
+      },
+      "mei": {
+        "amount": "Rp15.000",
+        "date": "2025-05-01"
+      },
+      "juni": {
+        "amount": "Rp15.000",
+        "date": "2025-06-01"
+      },
+      "total": "Rp180.000",
+      "kurang": "Rp0"
     },
-    { 
-      "nama": "Janitra Hayu Kirana Larasati", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-17" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-17" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-17" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-17" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Janitra Hayu Kirana Larasati",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-17"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-17"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-17"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-17"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Khuba Ludira Alam Purnomo", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-14" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-14" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-14" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-14" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-14" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-14" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-14" }, 
-      "februari": { "amount": "Rp15.000", "date": "2025-02-14" }, 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp120.000", 
-      "kurang": "Rp60.000" 
+    {
+      "nama": "Khuba Ludira Alam Purnomo",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-14"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-14"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-14"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-14"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-14"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-14"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-14"
+      },
+      "februari": {
+        "amount": "Rp15.000",
+        "date": "2025-02-14"
+      },
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp120.000",
+      "kurang": "Rp60.000"
     },
-    { 
-      "nama": "Latiffunissa Frindavan Ai Riyanto", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-11" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-11" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-11" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-11" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-11" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-11" }, 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp90.000", 
-      "kurang": "Rp90.000" 
+    {
+      "nama": "Latiffunissa Frindavan Ai Riyanto",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-11"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-11"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-11"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-11"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-11"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-11"
+      },
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp90.000",
+      "kurang": "Rp90.000"
     },
-    { 
-      "nama": "Layyinatuz Zahra", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-09" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-09" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-09" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-09" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-09" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-09" }, 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp90.000", 
-      "kurang": "Rp90.000" 
+    {
+      "nama": "Layyinatuz Zahra",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-09"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-09"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-09"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-09"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-09"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-09"
+      },
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp90.000",
+      "kurang": "Rp90.000"
     },
-    { 
-      "nama": "Meira Azzalea Putri", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-13" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-13" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-13" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-13" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-13" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-13" }, 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp90.000", 
-      "kurang": "Rp90.000" 
+    {
+      "nama": "Meira Azzalea Putri",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-13"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-13"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-13"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-13"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-13"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-13"
+      },
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp90.000",
+      "kurang": "Rp90.000"
     },
-    { 
-      "nama": "Pramudita Ayunindya Prameswari", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-16" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-16" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-16" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-16" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Pramudita Ayunindya Prameswari",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-16"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-16"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-16"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-16"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Putu Kaira Suciasa", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-19" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-19" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-19" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-19" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-19" }, 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp75.000", 
-      "kurang": "Rp105.000" 
+    {
+      "nama": "Putu Kaira Suciasa",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-19"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-19"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-19"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-19"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-19"
+      },
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp75.000",
+      "kurang": "Rp105.000"
     },
-    { 
-      "nama": "Qisya Jasmin Azzahra Arifianto", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-21" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-21" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-21" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-21" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Qisya Jasmin Azzahra Arifianto",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-21"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-21"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-21"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-21"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Rania Hassya Setiawan", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-06" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-06" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-06" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-06" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-06" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-06" }, 
-      "januari": { "amount": "Rp15.000", "date": "2025-01-06" }, 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp105.000", 
-      "kurang": "Rp75.000" 
+    {
+      "nama": "Rania Hassya Setiawan",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-06"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-06"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-06"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-06"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-06"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-06"
+      },
+      "januari": {
+        "amount": "Rp15.000",
+        "date": "2025-01-06"
+      },
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp105.000",
+      "kurang": "Rp75.000"
     },
-    { 
-      "nama": "Reissa Putri Elysia Sadira", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-23" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-23" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-23" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-23" }, 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp60.000", 
-      "kurang": "Rp120.000" 
+    {
+      "nama": "Reissa Putri Elysia Sadira",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-23"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-23"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-23"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-23"
+      },
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp60.000",
+      "kurang": "Rp120.000"
     },
-    { 
-      "nama": "Shine Okta Maulana Wahyudi", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-07" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-07" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-07" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-07" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-07" }, 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp75.000", 
-      "kurang": "Rp105.000" 
+    {
+      "nama": "Shine Okta Maulana Wahyudi",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-10-29"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-10-29"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-10-29"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-29"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-10-29"
+      },
+      "desember": {
+        "amount": "15000",
+        "date": "2025-10-29"
+      },
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp90.000",
+      "kurang": "Rp30.000"
     },
-    { 
-      "nama": "Tuwesly Moseshine Lamborghini", 
-      "juli": "", 
-      "agustus": "", 
-      "september": "", 
-      "oktober": "", 
-      "november": "", 
-      "desember": "", 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp0", 
-      "kurang": "Rp180.000" 
+    {
+      "nama": "Tuwesly Moseshine Lamborghini",
+      "juli": "",
+      "agustus": "",
+      "september": "",
+      "oktober": "",
+      "november": "",
+      "desember": "",
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp0",
+      "kurang": "Rp180.000"
     },
-    { 
-      "nama": "Utama Azka Nugraha", 
-      "juli": { "amount": "Rp15.000", "date": "2025-07-04" }, 
-      "agustus": { "amount": "Rp15.000", "date": "2025-08-04" }, 
-      "september": { "amount": "Rp15.000", "date": "2025-09-04" }, 
-      "oktober": { "amount": "Rp15.000", "date": "2025-10-04" }, 
-      "november": { "amount": "Rp15.000", "date": "2025-11-04" }, 
-      "desember": { "amount": "Rp15.000", "date": "2025-12-04" }, 
-      "januari": "", 
-      "februari": "", 
-      "maret": "", 
-      "april": "", 
-      "mei": "", 
-      "juni": "", 
-      "total": "Rp90.000", 
-      "kurang": "Rp90.000" 
+    {
+      "nama": "Utama Azka Nugraha",
+      "juli": {
+        "amount": "Rp15.000",
+        "date": "2025-07-04"
+      },
+      "agustus": {
+        "amount": "Rp15.000",
+        "date": "2025-08-04"
+      },
+      "september": {
+        "amount": "Rp15.000",
+        "date": "2025-09-04"
+      },
+      "oktober": {
+        "amount": "Rp15.000",
+        "date": "2025-10-04"
+      },
+      "november": {
+        "amount": "Rp15.000",
+        "date": "2025-11-04"
+      },
+      "desember": {
+        "amount": "Rp15.000",
+        "date": "2025-12-04"
+      },
+      "januari": "",
+      "februari": "",
+      "maret": "",
+      "april": "",
+      "mei": "",
+      "juni": "",
+      "total": "Rp90.000",
+      "kurang": "Rp90.000"
     }
   ]
 }
