@@ -6,10 +6,9 @@ function getApiConfig() {
         owner: localStorage.getItem('github_owner'),
         repo: localStorage.getItem('github_repo'),
         token: localStorage.getItem('github_token'),
-        branch: localStorage.getItem('github_branch') || 'main' // Default ke 'main'
+        branch: localStorage.getItem('github_branch') || 'main'
     };
 
-    // Validasi apakah semua konfigurasi yang diperlukan ada
     if (!config.owner || !config.repo || !config.token) {
         throw new Error('Konfigurasi API (Owner, Repo, Token) belum lengkap. Silakan atur di halaman Settings.');
     }
@@ -20,14 +19,16 @@ function getApiConfig() {
 /**
  * Mengambil konten file dari repository.
  * @param {string} path - Nama file (contoh: 'kas.json')
+ * @param {object} [config] - Objek konfigurasi opsional. Jika tidak ada, akan ambil dari localStorage.
  * @returns {Promise<any>} - Data JSON dari file
  */
-async function getFile(path) {
-    const config = getApiConfig(); // Ambil konfigurasi dari localStorage
-    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${config.branch}`;
+async function getFile(path, config) {
+    // Gunakan config yang diberikan, jika tidak ada, ambil dari localStorage
+    const apiConfig = config || getApiConfig(); 
+    const url = `https://api.github.com/repos/${apiConfig.owner}/${apiConfig.repo}/contents/${path}?ref=${apiConfig.branch}`;
     const response = await fetch(url, {
         headers: {
-            'Authorization': `token ${config.token}`
+            'Authorization': `token ${apiConfig.token}`
         }
     });
 
@@ -45,16 +46,18 @@ async function getFile(path) {
  * @param {string} path - Nama file (contoh: 'kas.json')
  * @param {any} content - Konten baru yang akan ditulis (objek atau array)
  * @param {string} message - Pesan commit
+ * @param {object} [config] - Objek konfigurasi opsional.
  * @returns {Promise<void>}
  */
-async function putFile(path, content, message) {
-    const config = getApiConfig(); // Ambil konfigurasi dari localStorage
+async function putFile(path, content, message, config) {
+    // Gunakan config yang diberikan, jika tidak ada, ambil dari localStorage
+    const apiConfig = config || getApiConfig();
 
     // 1. Dapatkan SHA file yang ada
     let sha;
     try {
-        const fileDataResponse = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${config.branch}`, {
-            headers: { 'Authorization': `token ${config.token}` }
+        const fileDataResponse = await fetch(`https://api.github.com/repos/${apiConfig.owner}/${apiConfig.repo}/contents/${path}?ref=${apiConfig.branch}`, {
+            headers: { 'Authorization': `token ${apiConfig.token}` }
         });
         if (fileDataResponse.ok) {
             const data = await fileDataResponse.json();
@@ -71,7 +74,7 @@ async function putFile(path, content, message) {
     const body = {
         message: message,
         content: contentBase64,
-        branch: config.branch
+        branch: apiConfig.branch
     };
 
     if (sha) {
@@ -79,11 +82,11 @@ async function putFile(path, content, message) {
     }
 
     // 3. Kirim permintaan PUT
-    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
+    const url = `https://api.github.com/repos/${apiConfig.owner}/${apiConfig.repo}/contents/${path}`;
     const response = await fetch(url, {
         method: 'PUT',
         headers: {
-            'Authorization': `token ${config.token}`,
+            'Authorization': `token ${apiConfig.token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
