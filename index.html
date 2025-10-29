@@ -161,6 +161,7 @@
             box-shadow: var(--shadow-sm);
             overflow: hidden;
             transition: box-shadow 0.2s;
+            position: relative;
         }
         .dues-list-item.expanded {
             box-shadow: var(--shadow-md);
@@ -174,6 +175,7 @@
         }
         .dues-list-item-header .info {
             flex-grow: 1;
+            margin-left: 60px; /* Space for profile photo */
         }
         .dues-list-item-header .name {
             font-weight: 600;
@@ -234,6 +236,17 @@
         }
         .payment-month.unpaid {
             color: var(--text-secondary);
+        }
+
+        /* --- Member Profile Photo --- */
+        .member-photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         /* --- History Screen --- */
@@ -355,6 +368,21 @@
         }
         .nota-item:hover img {
             transform: scale(1.05);
+        }
+        .nota-description {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .nota-item:hover .nota-description {
+            transform: translateY(0);
         }
 
         /* --- Image Preview Modal --- */
@@ -559,6 +587,21 @@
                 return date.toLocaleDateString('id-ID', options);
             }
 
+            function getLatestPaymentDate(member) {
+                const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                let latestDate = null;
+                
+                months.forEach(month => {
+                    if (member[month] && member[month].date) {
+                        if (!latestDate || new Date(member[month].date) > new Date(latestDate)) {
+                            latestDate = member[month].date;
+                        }
+                    }
+                });
+                
+                return latestDate ? formatDate(latestDate) : "Belum ada pembayaran";
+            }
+
             // --- DATA FETCHING AND INITIALIZATION ---
             async function loadData() {
                 try {
@@ -612,12 +655,19 @@
                         const listItem = document.createElement('div');
                         listItem.className = 'dues-list-item';
 
+                        // Add member photo
+                        const memberPhoto = document.createElement('img');
+                        memberPhoto.className = 'member-photo';
+                        memberPhoto.src = member.foto || `https://picsum.photos/seed/${member.nama}/100/100.jpg`;
+                        memberPhoto.alt = member.nama;
+                        listItem.appendChild(memberPhoto);
+
                         const header = document.createElement('div');
                         header.className = 'dues-list-item-header';
                         header.innerHTML = `
                             <div class="info">
                                 <div class="name">${member.nama}</div>
-                                <div class="status">Status: ${member.kurang === 'Rp0' ? 'Lunas' : 'Belum Lunas'}</div>
+                                <div class="status">Terakhir Bayar: ${getLatestPaymentDate(member)}</div>
                             </div>
                             <div class="amounts">
                                 <div class="total">${member.total}</div>
@@ -680,7 +730,8 @@
                             date: dateForSorting,
                             formattedDate: expense.tanggal,
                             description: expense.jenis,
-                            amount: expense.jumlah
+                            amount: expense.jumlah,
+                            foto: expense.foto || null
                         });
                     });
 
@@ -703,8 +754,17 @@
                     transactions.forEach(transaction => {
                         const listItem = document.createElement('li');
                         listItem.className = 'history-item';
+                        
+                        // Add expense photo if available
+                        let iconHTML = `<div class="history-icon ${type}">${type === 'income' ? '+' : '-'}</div>`;
+                        if (type === 'expense' && transaction.foto) {
+                            iconHTML = `<img src="${transaction.foto}" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
+                        } else if (type === 'expense') {
+                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
+                        }
+                        
                         listItem.innerHTML = `
-                            <div class="history-icon ${type}">${type === 'income' ? '+' : '-'}</div>
+                            ${iconHTML}
                             <div class="history-details">
                                 <div class="desc">${transaction.description}</div>
                                 <div class="date">${transaction.formattedDate}</div>
@@ -753,7 +813,8 @@
                             date: dateForSorting,
                             formattedDate: expense.tanggal,
                             description: expense.jenis,
-                            amount: expense.jumlah
+                            amount: expense.jumlah,
+                            foto: expense.foto || null
                         });
                     });
                     
@@ -764,8 +825,17 @@
                     recentTransactions.forEach(transaction => {
                         const listItem = document.createElement('li');
                         listItem.className = 'history-item';
+                        
+                        // Add expense photo if available
+                        let iconHTML = `<div class="history-icon ${transaction.type}">${transaction.type === 'income' ? '+' : '-'}</div>`;
+                        if (transaction.type === 'expense' && transaction.foto) {
+                            iconHTML = `<img src="${transaction.foto}" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
+                        } else if (transaction.type === 'expense') {
+                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
+                        }
+                        
                         listItem.innerHTML = `
-                            <div class="history-icon ${transaction.type}">${transaction.type === 'income' ? '+' : '-'}</div>
+                            ${iconHTML}
                             <div class="history-details">
                                 <div class="desc">${transaction.description}</div>
                                 <div class="date">${transaction.formattedDate}</div>
@@ -804,7 +874,10 @@
                     images.forEach((image, index) => {
                         const notaItem = document.createElement('div');
                         notaItem.className = 'nota-item';
-                        notaItem.innerHTML = `<img src="${image.url}" alt="${image.description || image.name}" data-index="${index}">`;
+                        notaItem.innerHTML = `
+                            <img src="${image.url}" alt="${image.description || image.name}" data-index="${index}">
+                            <div class="nota-description">${image.description || 'Tidak ada deskripsi'}</div>
+                        `;
                         gridContainer.appendChild(notaItem);
                     });
 
