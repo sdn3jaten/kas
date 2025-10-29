@@ -192,6 +192,8 @@
             border-bottom: 1px solid var(--border-color);
             transition: background-color 0.2s;
             position: relative;
+            display: flex;
+            align-items: center;
         }
         .list-item:last-child {
             border-bottom: none;
@@ -200,9 +202,21 @@
             background-color: var(--secondary-color);
         }
         .list-item-header {
+            flex-grow: 1;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+        }
+        .list-item-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .list-item-info {
+            flex-grow: 1;
         }
         .list-item-title {
             font-weight: 600;
@@ -1295,8 +1309,9 @@
                     const listItem = document.createElement('div');
                     listItem.className = 'list-item';
                     listItem.innerHTML = `
+                        <img src="${member.foto || `https://picsum.photos/seed/${member.nama}/100/100.jpg`}" alt="${member.nama}" class="list-item-photo">
                         <div class="list-item-header">
-                            <div>
+                            <div class="list-item-info">
                                 <div class="list-item-title" data-index="${index}">${member.nama}</div>
                                 <div class="list-item-subtitle">Total: ${member.total} | Kurang: ${member.kurang}</div>
                             </div>
@@ -1327,8 +1342,9 @@
                     const listItem = document.createElement('div');
                     listItem.className = 'list-item';
                     listItem.innerHTML = `
+                        <img src="${expense.foto || `https://picsum.photos/seed/${expense.jenis}/100/100.jpg`}" alt="${expense.jenis}" class="list-item-photo">
                         <div class="list-item-header">
-                            <div>
+                            <div class="list-item-info">
                                 <div class="list-item-title" data-index="${index}">${expense.jenis}</div>
                                 <div class="list-item-subtitle">${expense.tanggal} | ${expense.jumlah}</div>
                             </div>
@@ -1462,7 +1478,7 @@
                 document.getElementById('edit-member-modal').classList.remove('active');
             }
 
-            function saveMember() {
+            async function saveMember() {
                 const index = parseInt(document.getElementById('edit-member-index').value);
                 const member = kasData.members[index];
                 
@@ -1471,13 +1487,17 @@
                 // Save profile photo if changed
                 if (editMemberPhotoData) {
                     const fileName = `profile_${member.nama.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(editMemberPhotoData, fileName, 'profil')
-                        .then(photoUrl => {
-                            if (photoUrl) {
-                                member.foto = photoUrl;
-                                renderMembersList();
-                            }
-                        });
+                    try {
+                        const photoUrl = await uploadProfileImage(editMemberPhotoData, fileName, 'profil');
+                        if (photoUrl) {
+                            member.foto = photoUrl;
+                            // Update preview
+                            document.getElementById('edit-member-photo-preview').src = photoUrl;
+                        }
+                    } catch (error) {
+                        showStatus(error.message, 'error');
+                        return; // Stop execution if upload fails
+                    }
                 }
                 
                 const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
@@ -1571,7 +1591,7 @@
                 document.getElementById('edit-expense-modal').classList.remove('active');
             }
 
-            function saveExpense() {
+            async function saveExpense() {
                 const index = parseInt(document.getElementById('edit-expense-index').value);
                 const expense = pengeluaranData.expenses[index];
                 
@@ -1588,13 +1608,17 @@
                 // Save expense photo if changed
                 if (editExpensePhotoData) {
                     const fileName = `expense_${expense.jenis.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(editExpensePhotoData, fileName, 'foto')
-                        .then(photoUrl => {
-                            if (photoUrl) {
-                                expense.foto = photoUrl;
-                                renderExpensesList();
-                            }
-                        });
+                    try {
+                        const photoUrl = await uploadProfileImage(editExpensePhotoData, fileName, 'foto');
+                        if (photoUrl) {
+                            expense.foto = photoUrl;
+                            // Update preview
+                            document.getElementById('edit-expense-photo-preview').src = photoUrl;
+                        }
+                    } catch (error) {
+                        showStatus(error.message, 'error');
+                        return; // Stop execution if upload fails
+                    }
                 }
                 
                 updateFileContent('pengeluaran.json', pengeluaranData, `Update expense ${expense.jenis}`)
@@ -1766,7 +1790,7 @@
             });
 
             // Add member form
-            document.getElementById('save-new-member').addEventListener('click', function() {
+            document.getElementById('save-new-member').addEventListener('click', async function() {
                 if (!isConfigValid()) {
                     showStatus('Konfigurasi API tidak lengkap', 'error');
                     return;
@@ -1783,18 +1807,21 @@
                 // Save profile photo if uploaded
                 if (memberPhotoData) {
                     const fileName = `profile_${name.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(memberPhotoData, fileName, 'profil')
-                        .then(photoUrl => {
-                            if (photoUrl) {
-                                newMember.foto = photoUrl;
-                                // Continue with saving member data
-                                saveMemberData();
-                            }
-                        });
+                    try {
+                        const photoUrl = await uploadProfileImage(memberPhotoData, fileName, 'profil');
+                        if (photoUrl) {
+                            newMember.foto = photoUrl;
+                        } else {
+                            // Use placeholder if upload fails
+                            newMember.foto = `https://picsum.photos/seed/${name}/100/100.jpg`;
+                        }
+                    } catch (error) {
+                        showStatus(error.message, 'error');
+                        return; // Stop execution if upload fails
+                    }
                 } else {
                     // Use placeholder photo
                     newMember.foto = `https://picsum.photos/seed/${name}/100/100.jpg`;
-                    saveMemberData();
                 }
                 
                 function saveMemberData() {
@@ -1831,10 +1858,13 @@
                             showStatus(error.message, 'error');
                         });
                 }
+                
+                // Execute saveMemberData after handling photo
+                saveMemberData();
             });
 
             // Add expense form
-            document.getElementById('save-new-expense').addEventListener('click', function() {
+            document.getElementById('save-new-expense').addEventListener('click', async function() {
                 if (!isConfigValid()) {
                     showStatus('Konfigurasi API tidak lengkap', 'error');
                     return;
@@ -1855,18 +1885,21 @@
                 // Save expense photo if uploaded
                 if (expensePhotoData) {
                     const fileName = `expense_${newExpense.jenis.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(expensePhotoData, fileName, 'foto')
-                        .then(photoUrl => {
-                            if (photoUrl) {
-                                newExpense.foto = photoUrl;
-                                // Continue with saving expense data
-                                saveExpenseData();
-                            }
-                        });
+                    try {
+                        const photoUrl = await uploadProfileImage(expensePhotoData, fileName, 'foto');
+                        if (photoUrl) {
+                            newExpense.foto = photoUrl;
+                        } else {
+                            // Use placeholder if upload fails
+                            newExpense.foto = `https://picsum.photos/seed/${newExpense.jenis}/100/100.jpg`;
+                        }
+                    } catch (error) {
+                        showStatus(error.message, 'error');
+                        return; // Stop execution if upload fails
+                    }
                 } else {
                     // Use placeholder photo
                     newExpense.foto = `https://picsum.photos/seed/${newExpense.jenis}/100/100.jpg`;
-                    saveExpenseData();
                 }
                 
                 function saveExpenseData() {
@@ -1886,6 +1919,9 @@
                             showStatus(error.message, 'error');
                         });
                 }
+                
+                // Execute saveExpenseData after handling photo
+                saveExpenseData();
             });
 
             // Settings form
