@@ -970,7 +970,8 @@
                     });
 
                     if (!response.ok) {
-                        throw new Error(`Gagal mengambil file ${filePath}: ${response.statusText}`);
+                        const errorData = await response.json();
+                        throw new Error(`Gagal mengambil file ${filePath}: ${errorData.message || response.statusText}`);
                     }
 
                     const data = await response.json();
@@ -998,7 +999,8 @@
                     });
 
                     if (!response.ok) {
-                        throw new Error(`Gagal mengambil info file ${filePath}: ${response.statusText}`);
+                        const errorData = await response.json();
+                        throw new Error(`Gagal mengambil info file ${filePath}: ${errorData.message || response.statusText}`);
                     }
 
                     const fileInfo = await response.json();
@@ -1018,7 +1020,8 @@
                     });
 
                     if (!updateResponse.ok) {
-                        throw new Error(`Gagal memperbarui file ${filePath}: ${updateResponse.statusText}`);
+                        const errorData = await updateResponse.json();
+                        throw new Error(`Gagal memperbarui file ${filePath}: ${errorData.message || updateResponse.statusText}`);
                     }
 
                     return await updateResponse.json();
@@ -1036,7 +1039,6 @@
                 }
 
                 try {
-                    // Create folder if it doesn't exist
                     const folderPath = 'nota';
                     
                     // Upload image
@@ -1053,7 +1055,14 @@
                     });
 
                     if (!uploadResponse.ok) {
-                        throw new Error(`Gagal mengupload gambar: ${uploadResponse.statusText}`);
+                        const errorData = await uploadResponse.json();
+                        // Enhanced error logging
+                        console.error("Upload Error Response:", errorData);
+                        let errorMessage = `Gagal mengupload gambar: ${uploadResponse.statusText}`;
+                        if (errorData.message) {
+                            errorMessage = `Gagal mengupload gambar: ${errorData.message}`;
+                        }
+                        throw new Error(errorMessage);
                     }
 
                     const uploadData = await uploadResponse.json();
@@ -1093,7 +1102,8 @@
                     });
 
                     if (!response.ok) {
-                        throw new Error(`Gagal mengambil info gambar: ${response.statusText}`);
+                        const errorData = await response.json();
+                        throw new Error(`Gagal mengambil info gambar: ${errorData.message || response.statusText}`);
                     }
 
                     const imageInfo = await response.json();
@@ -1112,7 +1122,8 @@
                     });
 
                     if (!deleteResponse.ok) {
-                        throw new Error(`Gagal menghapus gambar: ${deleteResponse.statusText}`);
+                        const errorData = await deleteResponse.json();
+                        throw new Error(`Gagal menghapus gambar: ${errorData.message || deleteResponse.statusText}`);
                     }
                     
                     // Update nota.json
@@ -1176,8 +1187,8 @@
                     listContainer.appendChild(listItem);
                 });
 
-                // Add event listeners to member names
-                document.querySelectorAll('.list-item-title').forEach(title => {
+                // FIX: Add event listeners to member names within the correct container
+                listContainer.querySelectorAll('.list-item-title').forEach(title => {
                     title.addEventListener('click', function() {
                         const index = parseInt(this.getAttribute('data-index'));
                         openEditMemberModal(index);
@@ -1209,8 +1220,8 @@
                     listContainer.appendChild(listItem);
                 });
 
-                // Add event listeners to expense types
-                document.querySelectorAll('.list-item-title').forEach(title => {
+                // FIX: Add event listeners to expense types within the correct container
+                listContainer.querySelectorAll('.list-item-title').forEach(title => {
                     title.addEventListener('click', function() {
                         const index = parseInt(this.getAttribute('data-index'));
                         openEditExpenseModal(index);
