@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin - Kas Kelas</title>
     <style>
+        /* --- SEMUA STYLE SEBELUMNYA TETAP SAMA --- */
         /* --- Global Styles & Variables --- */
         :root {
             --primary-color: #0D28A6;
@@ -58,10 +59,26 @@
             text-align: center;
             box-shadow: var(--shadow-md);
             z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .app-header h1 {
             font-size: 1.2rem;
             font-weight: 500;
+        }
+        .settings-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        .settings-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         /* --- Main Content Area --- */
@@ -292,6 +309,11 @@
             color: white;
         }
         .btn-success:hover { background-color: #36b846; }
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .btn-danger:hover { background-color: #c91a1a; }
         .btn-block {
             width: 100%;
             display: block;
@@ -343,6 +365,48 @@
         .nav-item.active { color: var(--primary-color); }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 0.25rem; }
         .nav-item span { font-size: 0.75rem; }
+
+        /* --- NEW: Settings Modal --- */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .settings-modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-md);
+        }
+        .settings-modal h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .settings-modal .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .settings-modal .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .settings-modal .btn-container .btn {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -356,6 +420,7 @@
         <!-- Header -->
         <header class="app-header">
             <h1>Admin - Kas Kelas</h1>
+            <button class="settings-btn" onclick="openSettingsModal()">⚙️</button>
         </header>
 
         <!-- Main Content -->
@@ -448,6 +513,35 @@
         </nav>
     </div>
 
+    <!-- Settings Modal (Initially Hidden) -->
+    <div id="settings-overlay" class="settings-overlay" style="display: none;">
+        <div class="settings-modal">
+            <h2>Pengaturan API GitHub</h2>
+            <form id="settings-form">
+                <div class="form-group">
+                    <label for="setting-owner">Username (Owner)</label>
+                    <input type="text" id="setting-owner" required>
+                </div>
+                <div class="form-group">
+                    <label for="setting-repo">Nama Repository</label>
+                    <input type="text" id="setting-repo" required>
+                </div>
+                <div class="form-group">
+                    <label for="setting-token">Personal Access Token</label>
+                    <input type="password" id="setting-token" required>
+                </div>
+                <div class="form-group">
+                    <label for="setting-branch">Cabang (Branch)</label>
+                    <input type="text" id="setting-branch" value="main">
+                </div>
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="button" class="btn btn-danger" onclick="clearSettings()">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Sertakan API sebelum script utama -->
     <script src="api.js"></script>
     <script>
@@ -477,9 +571,45 @@
                 document.getElementById('save-button-container').style.display = show ? 'block' : 'none';
             }
 
+            // --- SETTINGS MODAL LOGIC ---
+            function openSettingsModal() {
+                document.getElementById('setting-owner').value = localStorage.getItem('github_owner') || '';
+                document.getElementById('setting-repo').value = localStorage.getItem('github_repo') || '';
+                document.getElementById('setting-token').value = localStorage.getItem('github_token') || '';
+                document.getElementById('setting-branch').value = localStorage.getItem('github_branch') || 'main';
+                document.getElementById('settings-overlay').style.display = 'flex';
+            }
+
+            function closeSettingsModal() {
+                document.getElementById('settings-overlay').style.display = 'none';
+            }
+
+            function saveSettings(e) {
+                e.preventDefault();
+                localStorage.setItem('github_owner', document.getElementById('setting-owner').value);
+                localStorage.setItem('github_repo', document.getElementById('setting-repo').value);
+                localStorage.setItem('github_token', document.getElementById('setting-token').value);
+                localStorage.setItem('github_branch', document.getElementById('setting-branch').value);
+                showMessage('Pengaturan berhasil disimpan! Halaman akan dimuat ulang.', 'success');
+                closeSettingsModal();
+                setTimeout(() => { window.location.reload(); }, 1500);
+            }
+
+            function clearSettings() {
+                if (confirm('Apakah Anda yakin ingin menghapus semua pengaturan?')) {
+                    localStorage.removeItem('github_owner');
+                    localStorage.removeItem('github_repo');
+                    localStorage.removeItem('github_token');
+                    localStorage.removeItem('github_branch');
+                    showMessage('Pengaturan dihapus. Halaman akan dimuat ulang.', 'info');
+                    setTimeout(() => { window.location.reload(); }, 1500);
+                }
+            }
+
             // --- DATA FETCHING AND INITIALIZATION ---
             async function loadData() {
                 try {
+                    // This will now throw an error if config is not complete
                     const [kas, pengeluaran] = await Promise.all([
                         GitHubAPI.getFile('kas.json'),
                         GitHubAPI.getFile('pengeluaran.json')
@@ -489,7 +619,13 @@
                     initializeApp();
                 } catch (error) {
                     console.error('Error loading data:', error);
-                    document.querySelector('.main-content').innerHTML = `<div class="message error">Gagal memuat data. Pastikan token benar dan repository sudah ada. Error: ${error.message}</div>`;
+                    // If the error is about missing config, show the settings modal
+                    if (error.message.includes('Konfigurasi API')) {
+                        showMessage('Silakan lengkapi pengaturan API terlebih dahulu.', 'error');
+                        openSettingsModal();
+                    } else {
+                        document.querySelector('.main-content').innerHTML = `<div class="message error">Gagal memuat data. Periksa pengaturan Anda. Error: ${error.message}</div>`;
+                    }
                 }
             }
 
@@ -501,12 +637,11 @@
                 setupEventListeners();
             }
 
-            // --- RENDER FUNCTIONS ---
+            // --- RENDER FUNCTIONS (Tetap Sama) ---
             function renderSummary() {
                 const totalIncome = membersData.reduce((sum, member) => sum + parseRupiah(member.total), 0);
                 const totalExpense = expensesData.reduce((sum, expense) => sum + parseRupiah(expense.jumlah), 0);
                 const finalBalance = totalIncome - totalExpense;
-
                 document.getElementById('total-income').innerText = formatRupiah(totalIncome);
                 document.getElementById('total-expense').innerText = formatRupiah(totalExpense);
                 document.getElementById('final-balance').innerText = formatRupiah(finalBalance);
@@ -517,26 +652,17 @@
                 listContainer.innerHTML = '';
                 const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
                 const monthNames = ['Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'];
-
                 membersData.forEach((member, memberIndex) => {
                     const listItem = document.createElement('div');
                     listItem.className = 'dues-list-item';
-
                     const header = document.createElement('div');
                     header.className = 'dues-list-item-header';
                     header.innerHTML = `
-                        <div class="info">
-                            <div class="name">${member.nama}</div>
-                            <div class="status">Status: ${member.kurang === 'Rp0' ? 'Lunas' : 'Belum Lunas'}</div>
-                        </div>
-                        <div class="amounts">
-                            <div class="total">${member.total}</div>
-                            <div class="kurang">Kurang: ${member.kurang}</div>
-                        </div>
+                        <div class="info"><div class="name">${member.nama}</div><div class="status">Status: ${member.kurang === 'Rp0' ? 'Lunas' : 'Belum Lunas'}</div></div>
+                        <div class="amounts"><div class="total">${member.total}</div><div class="kurang">Kurang: ${member.kurang}</div></div>
                         <div class="chevron">▼</div>
                     `;
                     listItem.appendChild(header);
-
                     const details = document.createElement('div');
                     details.className = 'dues-list-item-details';
                     let monthlyGridHTML = '';
@@ -547,7 +673,6 @@
                     });
                     details.innerHTML = `<div class="monthly-payments-grid">${monthlyGridHTML}</div>`;
                     listItem.appendChild(details);
-
                     header.addEventListener('click', () => listItem.classList.toggle('expanded'));
                     listContainer.appendChild(listItem);
                 });
@@ -566,7 +691,6 @@
                 });
                 incomeTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 renderTransactionList('income-list', incomeTransactions, 'income');
-                
                 const sortedExpenses = [...expensesData].sort((a, b) => new Date(b.tanggal.split(', ')[1].trim()) - new Date(a.tanggal.split(', ')[1].trim()));
                 renderTransactionList('expense-list', sortedExpenses, 'expense');
             }
@@ -625,6 +749,14 @@
 
             // --- EVENT LISTENERS & ACTIONS ---
             function setupEventListeners() {
+                // Settings form
+                document.getElementById('settings-form').addEventListener('submit', saveSettings);
+                document.getElementById('settings-overlay').addEventListener('click', (e) => {
+                    if (e.target.id === 'settings-overlay') {
+                        closeSettingsModal();
+                    }
+                });
+
                 // Navigation
                 const navItems = document.querySelectorAll('.nav-item');
                 const screens = document.querySelectorAll('.screen');
@@ -658,7 +790,7 @@
                     });
                 });
 
-                // Payment Month Click (Delegated Event)
+                // Payment Month Click
                 document.getElementById('dues-list-container').addEventListener('click', (e) => {
                     if (e.target.classList.contains('payment-month')) {
                         const memberIndex = e.target.dataset.memberIndex;
