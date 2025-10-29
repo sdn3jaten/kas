@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kas Kelas</title>
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --primary-color: #0D28A6;
+            --primary-light: #E9EFFC;
+            --secondary-color: #F3F4F8;
+            --success-color: #3ECF4E;
+            --danger-color: #E31E1E;
+            --text-primary: #1A1A1A;
+            --text-secondary: #8A8A8A;
+            --border-color: #E0E0E0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-primary);
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* --- Header --- */
+        .app-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+        .app-header h1 {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        .screen {
+            display: none; /* Hide all screens by default */
+        }
+        .screen.active {
+            display: block; /* Show active screen */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Home Screen --- */
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary-color), #4B6CDF);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+        }
+        .balance-card .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .balance-card .amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .summary-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+        .summary-card .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .summary-card .amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .summary-card.income .amount { color: var(--success-color); }
+        .summary-card.expense .amount { color: var(--danger-color); }
+        
+        /* --- New Section on Home --- */
+        .home-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .home-section .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .home-section .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .home-section .see-all-link {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* --- Dues Screen (LIST STYLE) --- */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        .dues-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .dues-list-item {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .dues-list-item.expanded {
+            box-shadow: var(--shadow-md);
+        }
+        .dues-list-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            cursor: pointer;
+        }
+        .dues-list-item-header .info {
+            flex-grow: 1;
+        }
+        .dues-list-item-header .name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .dues-list-item-header .status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+        .dues-list-item-header .amounts {
+            text-align: right;
+        }
+        .dues-list-item-header .total {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--success-color);
+        }
+        .dues-list-item-header .kurang {
+            font-size: 0.8rem;
+            color: var(--danger-color);
+        }
+        .dues-list-item-header .chevron {
+            margin-left: 1rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+        .dues-list-item.expanded .chevron {
+            transform: rotate(180deg);
+        }
+        .dues-list-item-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            background-color: var(--secondary-color);
+            padding: 0 1rem;
+        }
+        .dues-list-item.expanded .dues-list-item-details {
+            max-height: 500px; /* Adjust as needed */
+            padding: 1rem;
+        }
+        .monthly-payments-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .payment-month {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .payment-month.paid {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        .payment-month.unpaid {
+            color: var(--text-secondary);
+        }
+
+        /* --- History Screen --- */
+        .history-list {
+            list-style-type: none;
+        }
+        .history-item {
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 0.75rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .history-icon.income {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .history-icon.expense {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .history-details {
+            flex-grow: 1;
+        }
+        .history-details .desc {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .history-details .date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+        .history-amount {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .history-amount.income {
+            color: var(--success-color);
+        }
+        .history-amount.expense {
+            color: var(--danger-color);
+        }
+        
+        /* --- NEW: Tab Styles for History Screen --- */
+        .tab-container {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            padding: 0.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .tab-button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .tab-content {
+            position: relative;
+        }
+        .tab-pane {
+            display: none; /* Hidden by default */
+        }
+        .tab-pane.active {
+            display: block; /* Shown when active */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* --- Loading/Error Message --- */
+        .message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* --- Bottom Navigation --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 0.25rem;
+        }
+        .nav-item span {
+            font-size: 0.75rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>Kas Kelas</h1>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Home Screen -->
+            <div id="home-screen" class="screen active">
+                <div class="balance-card">
+                    <div class="label">Saldo Kas Tersedia</div>
+                    <div class="amount" id="final-balance">Rp0</div>
+                </div>
+                <div class="summary-cards">
+                    <div class="summary-card income">
+                        <div class="label">Total Pemasukan</div>
+                        <div class="amount" id="total-income">Rp0</div>
+                    </div>
+                    <div class="summary-card expense">
+                        <div class="label">Total Pengeluaran</div>
+                        <div class="amount" id="total-expense">Rp0</div>
+                    </div>
+                </div>
+
+                <!-- NEW: Recent History Section -->
+                <div class="home-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Riwayat Terakhir</h2>
+                        <a href="#" id="see-all-link" class="see-all-link">Lihat Semua</a>
+                    </div>
+                    <ul id="recent-history-list" class="history-list">
+                        <!-- Recent items will be injected here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dues Screen -->
+            <div id="iuran-screen" class="screen">
+                <h2 class="section-title">Data Iuran Anggota</h2>
+                <div id="dues-list-container" class="dues-list-container">
+                    <!-- List items will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- History Screen -->
+            <div id="riwayat-screen" class="screen">
+                <h2 class="section-title">Riwayat Transaksi</h2>
+                <div class="tab-container">
+                    <button class="tab-button active" data-tab="income">Kas Masuk</button>
+                    <button class="tab-button" data-tab="expense">Pengeluaran</button>
+                </div>
+                <div class="tab-content">
+                    <ul id="income-list" class="history-list tab-pane active"></ul>
+                    <ul id="expense-list" class="history-list tab-pane"></ul>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-screen="home-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                <span>Beranda</span>
+            </button>
+            <button class="nav-item" data-screen="iuran-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+                <span>Iuran</span>
+            </button>
+            <button class="nav-item" data-screen="riwayat-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                <span>Riwayat</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- HELPER FUNCTIONS ---
+            function parseRupiah(str) { 
+                if (!str || str === "") return 0; 
+                return parseInt(str.replace(/[^\d]/g, ''), 10); 
+            }
+            
+            function formatRupiah(num) { 
+                return "Rp" + num.toLocaleString('id-ID'); 
+            }
+            
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('id-ID', options);
+            }
+
+            // --- DATA FETCHING AND INITIALIZATION ---
+            async function loadData() {
+                try {
+                    const [kasResponse, pengeluaranResponse] = await Promise.all([
+                        fetch('kas.json'),
+                        fetch('pengeluaran.json')
+                    ]);
+
+                    if (!kasResponse.ok || !pengeluaranResponse.ok) {
+                        throw new Error('Gagal memuat salah satu file data.');
+                    }
+
+                    const kasData = await kasResponse.json();
+                    const pengeluaranData = await pengeluaranResponse.json();
+
+                    // Initialize the app with the fetched data
+                    initializeApp(kasData.members, pengeluaranData.expenses);
+
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    // Display an error message to the user
+                    document.querySelector('.main-content').innerHTML = `
+                        <div class="message">
+                            <p>Terjadi kesalahan saat memuat data.</p>
+                            <p>Pastikan file 'kas.json' dan 'pengeluaran.json' ada dan server lokal sedang berjalan.</p>
+                            <p>Detail: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+
+            function initializeApp(membersData, expensesData) {
+                // --- CALCULATIONS ---
+                const totalIncome = membersData.reduce((sum, member) => sum + parseRupiah(member.total), 0);
+                const totalExpense = expensesData.reduce((sum, expense) => sum + parseRupiah(expense.jumlah), 0);
+                const finalBalance = totalIncome - totalExpense;
+
+                // --- RENDER FUNCTIONS (now accepting data as parameters) ---
+                function renderSummary() {
+                    document.getElementById('total-income').innerText = formatRupiah(totalIncome);
+                    document.getElementById('total-expense').innerText = formatRupiah(totalExpense);
+                    document.getElementById('final-balance').innerText = formatRupiah(finalBalance);
+                }
+
+                function renderDuesList() {
+                    const listContainer = document.getElementById('dues-list-container');
+                    const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                    const monthNames = ['Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'];
+
+                    membersData.forEach(member => {
+                        const listItem = document.createElement('div');
+                        listItem.className = 'dues-list-item';
+
+                        const header = document.createElement('div');
+                        header.className = 'dues-list-item-header';
+                        header.innerHTML = `
+                            <div class="info">
+                                <div class="name">${member.nama}</div>
+                                <div class="status">Status: ${member.kurang === 'Rp0' ? 'Lunas' : 'Belum Lunas'}</div>
+                            </div>
+                            <div class="amounts">
+                                <div class="total">${member.total}</div>
+                                <div class="kurang">Kurang: ${member.kurang}</div>
+                            </div>
+                            <div class="chevron">▼</div>
+                        `;
+                        listItem.appendChild(header);
+
+                        const details = document.createElement('div');
+                        details.className = 'dues-list-item-details';
+                        let monthlyGridHTML = '';
+                        months.forEach((monthKey, index) => {
+                            const monthData = member[monthKey];
+                            const isPaid = monthData && monthData.amount !== "";
+                            monthlyGridHTML += `<div class="payment-month ${isPaid ? 'paid' : 'unpaid'}">${monthNames[index]}</div>`;
+                        });
+                        details.innerHTML = `<div class="monthly-payments-grid">${monthlyGridHTML}</div>`;
+                        listItem.appendChild(details);
+
+                        header.addEventListener('click', () => {
+                            listItem.classList.toggle('expanded');
+                        });
+
+                        listContainer.appendChild(listItem);
+                    });
+                }
+
+                function initializeHistoryScreen() {
+                    const incomeTransactions = [];
+                    const expenseTransactions = [];
+                    
+                    membersData.forEach(member => {
+                        const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                        
+                        months.forEach(month => {
+                            const monthData = member[month];
+                            if (monthData && monthData.amount !== "") {
+                                incomeTransactions.push({
+                                    date: monthData.date,
+                                    formattedDate: formatDate(monthData.date),
+                                    description: member.nama,
+                                    amount: monthData.amount
+                                });
+                            }
+                        });
+                    });
+                    
+                    expensesData.forEach(expense => {
+                        const dateParts = expense.tanggal.split(', ');
+                        const dayMonthYear = dateParts[1].split(' ');
+                        const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                        const monthIndex = monthNames.indexOf(dayMonthYear[1]);
+                        const day = dayMonthYear[0];
+                        const year = dayMonthYear[2];
+                        
+                        const dateForSorting = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        
+                        expenseTransactions.push({
+                            date: dateForSorting,
+                            formattedDate: expense.tanggal,
+                            description: expense.jenis,
+                            amount: expense.jumlah
+                        });
+                    });
+
+                    incomeTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    expenseTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    renderTransactionList('income-list', incomeTransactions, 'income');
+                    renderTransactionList('expense-list', expenseTransactions, 'expense');
+                }
+
+                function renderTransactionList(listId, transactions, type) {
+                    const listContainer = document.getElementById(listId);
+                    listContainer.innerHTML = '';
+
+                    if (transactions.length === 0) {
+                        listContainer.innerHTML = `<li class="history-item"><div class="history-details"><div class="desc">Belum ada transaksi.</div></div></li>`;
+                        return;
+                    }
+
+                    transactions.forEach(transaction => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'history-item';
+                        listItem.innerHTML = `
+                            <div class="history-icon ${type}">${type === 'income' ? '+' : '-'}</div>
+                            <div class="history-details">
+                                <div class="desc">${transaction.description}</div>
+                                <div class="date">${transaction.formattedDate}</div>
+                            </div>
+                            <div class="history-amount ${type}">${type === 'income' ? '+' : '-'} ${transaction.amount}</div>
+                        `;
+                        listContainer.appendChild(listItem);
+                    });
+                }
+                
+                function renderRecentHistory() {
+                    const listContainer = document.getElementById('recent-history-list');
+                    listContainer.innerHTML = '';
+                    
+                    const allTransactions = [];
+                    
+                    membersData.forEach(member => {
+                        const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                        
+                        months.forEach(month => {
+                            const monthData = member[month];
+                            if (monthData && monthData.amount !== "") {
+                                allTransactions.push({
+                                    type: 'income',
+                                    date: monthData.date,
+                                    formattedDate: formatDate(monthData.date),
+                                    description: member.nama,
+                                    amount: monthData.amount
+                                });
+                            }
+                        });
+                    });
+                    
+                    expensesData.forEach(expense => {
+                        const dateParts = expense.tanggal.split(', ');
+                        const dayMonthYear = dateParts[1].split(' ');
+                        const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                        const monthIndex = monthNames.indexOf(dayMonthYear[1]);
+                        const day = dayMonthYear[0];
+                        const year = dayMonthYear[2];
+                        
+                        const dateForSorting = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        
+                        allTransactions.push({
+                            type: 'expense',
+                            date: dateForSorting,
+                            formattedDate: expense.tanggal,
+                            description: expense.jenis,
+                            amount: expense.jumlah
+                        });
+                    });
+                    
+                    allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    const recentTransactions = allTransactions.slice(0, 5);
+                    
+                    recentTransactions.forEach(transaction => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'history-item';
+                        listItem.innerHTML = `
+                            <div class="history-icon ${transaction.type}">${transaction.type === 'income' ? '+' : '-'}</div>
+                            <div class="history-details">
+                                <div class="desc">${transaction.description}</div>
+                                <div class="date">${transaction.formattedDate}</div>
+                            </div>
+                            <div class="history-amount ${transaction.type}">${transaction.type === 'income' ? '+' : '-'} ${transaction.amount}</div>
+                        `;
+                        listContainer.appendChild(listItem);
+                    });
+                }
+
+                // --- NAVIGATION LOGIC ---
+                const navItems = document.querySelectorAll('.nav-item');
+                const screens = document.querySelectorAll('.screen');
+
+                navItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const targetScreenId = item.dataset.screen;
+
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        screens.forEach(screen => screen.classList.remove('active'));
+
+                        item.classList.add('active');
+                        document.getElementById(targetScreenId).classList.add('active');
+                    });
+                });
+
+                // --- "See All" link logic ---
+                document.getElementById('see-all-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelector('[data-screen="riwayat-screen"]').click();
+                });
+
+                // --- TAB SWITCHING LOGIC ---
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabPanes = document.querySelectorAll('.tab-pane');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const targetTab = button.getAttribute('data-tab');
+
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabPanes.forEach(pane => pane.classList.remove('active'));
+
+                        button.classList.add('active');
+                        document.getElementById(`${targetTab}-list`).classList.add('active');
+                    });
+                });
+
+                // --- INITIALIZE APP COMPONENTS ---
+                renderSummary();
+                renderDuesList();
+                initializeHistoryScreen();
+                renderRecentHistory();
+            }
+
+            // --- START THE APP ---
+            loadData();
+        });
+    </script>
+</body>
+</html>
