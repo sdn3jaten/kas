@@ -1168,33 +1168,31 @@
                 }
             }
 
-            async function uploadProfileImage(imageContent, fileName) {
+            async function uploadProfileImage(imageContent, fileName, folder) {
                 if (!isConfigValid()) {
                     showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
                     return null;
                 }
 
                 try {
-                    const folderPath = 'foto';
-                    
                     // Upload image
-                    const uploadResponse = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${folderPath}/${fileName}`, {
+                    const uploadResponse = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${folder}/${fileName}`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `token ${config.token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: `Upload profile image: ${fileName}`,
+                            message: `Upload image: ${fileName}`,
                             content: imageContent
                         })
                     });
 
                     if (!uploadResponse.ok) {
                         const errorData = await uploadResponse.json();
-                        let errorMessage = `Gagal mengupload gambar profil: ${uploadResponse.statusText}`;
+                        let errorMessage = `Gagal mengupload gambar: ${uploadResponse.statusText}`;
                         if (errorData.message) {
-                            errorMessage = `Gagal mengupload gambar profil: ${errorData.message}`;
+                            errorMessage = `Gagal mengupload gambar: ${errorData.message}`;
                         }
                         throw new Error(errorMessage);
                     }
@@ -1473,7 +1471,7 @@
                 // Save profile photo if changed
                 if (editMemberPhotoData) {
                     const fileName = `profile_${member.nama.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(editMemberPhotoData, fileName)
+                    uploadProfileImage(editMemberPhotoData, fileName, 'profil')
                         .then(photoUrl => {
                             if (photoUrl) {
                                 member.foto = photoUrl;
@@ -1590,7 +1588,7 @@
                 // Save expense photo if changed
                 if (editExpensePhotoData) {
                     const fileName = `expense_${expense.jenis.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(editExpensePhotoData, fileName)
+                    uploadProfileImage(editExpensePhotoData, fileName, 'foto')
                         .then(photoUrl => {
                             if (photoUrl) {
                                 expense.foto = photoUrl;
@@ -1785,7 +1783,7 @@
                 // Save profile photo if uploaded
                 if (memberPhotoData) {
                     const fileName = `profile_${name.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(memberPhotoData, fileName)
+                    uploadProfileImage(memberPhotoData, fileName, 'profil')
                         .then(photoUrl => {
                             if (photoUrl) {
                                 newMember.foto = photoUrl;
@@ -1857,7 +1855,7 @@
                 // Save expense photo if uploaded
                 if (expensePhotoData) {
                     const fileName = `expense_${newExpense.jenis.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
-                    uploadProfileImage(expensePhotoData, fileName)
+                    uploadProfileImage(expensePhotoData, fileName, 'foto')
                         .then(photoUrl => {
                             if (photoUrl) {
                                 newExpense.foto = photoUrl;
