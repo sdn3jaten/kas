@@ -819,7 +819,11 @@
       "mei": "",
       "juni": "",
       "total": "Rp75.000",
-      "kurang": "Rp45.000"
+      "kurang": "Rp45.000",
+      "desember": {
+        "amount": "0",
+        "date": "2025-10-29"
+      }
     },
     {
       "foto": "",
