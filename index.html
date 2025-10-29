@@ -161,21 +161,34 @@
             box-shadow: var(--shadow-sm);
             overflow: hidden;
             transition: box-shadow 0.2s;
-            position: relative;
+            display: flex;
+            align-items: center;
         }
         .dues-list-item.expanded {
             box-shadow: var(--shadow-md);
+        }
+        .member-profile-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0.75rem;
+        }
+        .dues-list-item-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         .dues-list-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem;
+            padding-left: 0;
             cursor: pointer;
         }
         .dues-list-item-header .info {
             flex-grow: 1;
-            margin-left: 60px; /* Space for profile photo */
         }
         .dues-list-item-header .name {
             font-weight: 600;
@@ -238,17 +251,6 @@
             color: var(--text-secondary);
         }
 
-        /* --- Member Profile Photo --- */
-        .member-photo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
         /* --- History Screen --- */
         .history-list {
             list-style-type: none;
@@ -266,6 +268,13 @@
         .history-item:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
+        }
+        .history-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
         }
         .history-icon {
             width: 40px;
@@ -369,21 +378,6 @@
         .nota-item:hover img {
             transform: scale(1.05);
         }
-        .nota-description {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 0.5rem;
-            font-size: 0.8rem;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-        .nota-item:hover .nota-description {
-            transform: translateY(0);
-        }
 
         /* --- Image Preview Modal --- */
         .image-preview-modal {
@@ -397,19 +391,27 @@
             z-index: 1001;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
         .image-preview-modal.active {
             display: flex;
         }
         .image-preview-container {
             max-width: 90%;
-            max-height: 90%;
+            max-height: 70%;
             position: relative;
         }
         .image-preview-container img {
             max-width: 100%;
             max-height: 100%;
             border-radius: 8px;
+        }
+        .image-preview-description {
+            color: white;
+            margin-top: 1rem;
+            text-align: center;
+            max-width: 90%;
+            font-size: 1rem;
         }
         .image-preview-close {
             position: absolute;
@@ -566,6 +568,7 @@
             <button class="image-preview-close">&times;</button>
             <img id="preview-full-image" src="" alt="Nota Preview">
         </div>
+        <div id="image-preview-description" class="image-preview-description"></div>
     </div>
 
     <script>
@@ -585,21 +588,6 @@
                 const date = new Date(dateString);
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 return date.toLocaleDateString('id-ID', options);
-            }
-
-            function getLatestPaymentDate(member) {
-                const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
-                let latestDate = null;
-                
-                months.forEach(month => {
-                    if (member[month] && member[month].date) {
-                        if (!latestDate || new Date(member[month].date) > new Date(latestDate)) {
-                            latestDate = member[month].date;
-                        }
-                    }
-                });
-                
-                return latestDate ? formatDate(latestDate) : "Belum ada pembayaran";
             }
 
             // --- DATA FETCHING AND INITIALIZATION ---
@@ -655,19 +643,32 @@
                         const listItem = document.createElement('div');
                         listItem.className = 'dues-list-item';
 
-                        // Add member photo
-                        const memberPhoto = document.createElement('img');
-                        memberPhoto.className = 'member-photo';
-                        memberPhoto.src = member.foto || `https://picsum.photos/seed/${member.nama}/100/100.jpg`;
-                        memberPhoto.alt = member.nama;
-                        listItem.appendChild(memberPhoto);
+                        // Add profile photo from "foto" folder
+                        const profilePhoto = document.createElement('img');
+                        profilePhoto.className = 'member-profile-photo';
+                        profilePhoto.src = member.foto ? 'foto/' + member.foto : 'https://picsum.photos/seed/' + member.nama.replace(/\s+/g, '') + '/60/60.jpg';
+                        profilePhoto.alt = member.nama;
+                        listItem.appendChild(profilePhoto);
+
+                        const contentContainer = document.createElement('div');
+                        contentContainer.className = 'dues-list-item-content';
 
                         const header = document.createElement('div');
                         header.className = 'dues-list-item-header';
+                        
+                        // Find the last payment date
+                        let lastPaymentDate = "Belum ada pembayaran";
+                        months.forEach(month => {
+                            const monthData = member[month];
+                            if (monthData && monthData.amount !== "") {
+                                lastPaymentDate = formatDate(monthData.date);
+                            }
+                        });
+                        
                         header.innerHTML = `
                             <div class="info">
                                 <div class="name">${member.nama}</div>
-                                <div class="status">Terakhir Bayar: ${getLatestPaymentDate(member)}</div>
+                                <div class="status">Terakhir Bayar: ${lastPaymentDate}</div>
                             </div>
                             <div class="amounts">
                                 <div class="total">${member.total}</div>
@@ -675,7 +676,7 @@
                             </div>
                             <div class="chevron">▼</div>
                         `;
-                        listItem.appendChild(header);
+                        contentContainer.appendChild(header);
 
                         const details = document.createElement('div');
                         details.className = 'dues-list-item-details';
@@ -686,7 +687,9 @@
                             monthlyGridHTML += `<div class="payment-month ${isPaid ? 'paid' : 'unpaid'}">${monthNames[index]}</div>`;
                         });
                         details.innerHTML = `<div class="monthly-payments-grid">${monthlyGridHTML}</div>`;
-                        listItem.appendChild(details);
+                        contentContainer.appendChild(details);
+
+                        listItem.appendChild(contentContainer);
 
                         header.addEventListener('click', () => {
                             listItem.classList.toggle('expanded');
@@ -711,7 +714,7 @@
                                     formattedDate: formatDate(monthData.date),
                                     description: member.nama,
                                     amount: monthData.amount,
-                                    foto: member.foto || null
+                                    photo: member.foto ? 'foto/' + member.foto : 'https://picsum.photos/seed/' + member.nama.replace(/\s+/g, '') + '/40/40.jpg'
                                 });
                             }
                         });
@@ -732,7 +735,7 @@
                             formattedDate: expense.tanggal,
                             description: expense.jenis,
                             amount: expense.jumlah,
-                            foto: expense.foto || null
+                            photo: expense.foto ? 'foto/' + expense.foto : 'https://picsum.photos/seed/' + expense.jenis.replace(/\s+/g, '') + '/40/40.jpg'
                         });
                     });
 
@@ -756,24 +759,23 @@
                         const listItem = document.createElement('li');
                         listItem.className = 'history-item';
                         
-                        // Add photo if available
-                        let iconHTML = `<div class="history-icon ${type}">${type === 'income' ? '+' : '-'}</div>`;
-                        if (transaction.foto) {
-                            iconHTML = `<img src="${transaction.foto}" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
-                        } else if (type === 'income') {
-                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
-                        } else if (type === 'expense') {
-                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
-                        }
+                        // Create photo element
+                        const photoElement = document.createElement('img');
+                        photoElement.className = 'history-photo';
+                        photoElement.src = transaction.photo;
+                        photoElement.alt = transaction.description;
                         
                         listItem.innerHTML = `
-                            ${iconHTML}
                             <div class="history-details">
                                 <div class="desc">${transaction.description}</div>
                                 <div class="date">${transaction.formattedDate}</div>
                             </div>
                             <div class="history-amount ${type}">${type === 'income' ? '+' : '-'} ${transaction.amount}</div>
                         `;
+                        
+                        // Insert photo at the beginning
+                        listItem.insertBefore(photoElement, listItem.firstChild);
+                        
                         listContainer.appendChild(listItem);
                     });
                 }
@@ -796,7 +798,7 @@
                                     formattedDate: formatDate(monthData.date),
                                     description: member.nama,
                                     amount: monthData.amount,
-                                    foto: member.foto || null
+                                    photo: member.foto ? 'foto/' + member.foto : 'https://picsum.photos/seed/' + member.nama.replace(/\s+/g, '') + '/40/40.jpg'
                                 });
                             }
                         });
@@ -818,7 +820,7 @@
                             formattedDate: expense.tanggal,
                             description: expense.jenis,
                             amount: expense.jumlah,
-                            foto: expense.foto || null
+                            photo: expense.foto ? 'foto/' + expense.foto : 'https://picsum.photos/seed/' + expense.jenis.replace(/\s+/g, '') + '/40/40.jpg'
                         });
                     });
                     
@@ -830,24 +832,23 @@
                         const listItem = document.createElement('li');
                         listItem.className = 'history-item';
                         
-                        // Add photo if available
-                        let iconHTML = `<div class="history-icon ${transaction.type}">${transaction.type === 'income' ? '+' : '-'}</div>`;
-                        if (transaction.foto) {
-                            iconHTML = `<img src="${transaction.foto}" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
-                        } else if (transaction.type === 'income') {
-                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
-                        } else if (transaction.type === 'expense') {
-                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
-                        }
+                        // Create photo element
+                        const photoElement = document.createElement('img');
+                        photoElement.className = 'history-photo';
+                        photoElement.src = transaction.photo;
+                        photoElement.alt = transaction.description;
                         
                         listItem.innerHTML = `
-                            ${iconHTML}
                             <div class="history-details">
                                 <div class="desc">${transaction.description}</div>
                                 <div class="date">${transaction.formattedDate}</div>
                             </div>
                             <div class="history-amount ${transaction.type}">${transaction.type === 'income' ? '+' : '-'} ${transaction.amount}</div>
                         `;
+                        
+                        // Insert photo at the beginning
+                        listItem.insertBefore(photoElement, listItem.firstChild);
+                        
                         listContainer.appendChild(listItem);
                     });
                 }
@@ -880,26 +881,25 @@
                     images.forEach((image, index) => {
                         const notaItem = document.createElement('div');
                         notaItem.className = 'nota-item';
-                        notaItem.innerHTML = `
-                            <img src="${image.url}" alt="${image.description || image.name}" data-index="${index}">
-                            <div class="nota-description">${image.description || 'Tidak ada deskripsi'}</div>
-                        `;
+                        notaItem.innerHTML = `<img src="${image.url}" alt="${image.description || image.name}" data-index="${index}" data-description="${image.description || ''}">`;
                         gridContainer.appendChild(notaItem);
                     });
 
                     // Add event listener to images for preview
                     document.querySelectorAll('.nota-item img').forEach(img => {
                         img.addEventListener('click', function() {
-                            openImagePreview(this.src);
+                            openImagePreview(this.src, this.dataset.description);
                         });
                     });
                 }
 
-                function openImagePreview(imageSrc) {
+                function openImagePreview(imageSrc, description) {
                     const modal = document.getElementById('image-preview-modal');
                     const previewImage = document.getElementById('preview-full-image');
+                    const descriptionElement = document.getElementById('image-preview-description');
                     
                     previewImage.src = imageSrc;
+                    descriptionElement.textContent = description || '';
                     modal.classList.add('active');
                 }
 
