@@ -2,18 +2,22 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Kas Kelas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin - Kas Kelas</title>
     <style>
+        /* --- Global Styles & Variables --- */
         :root {
             --primary-color: #0D28A6;
-            --secondary-color: #4B6CDF;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --border-color: #dee2e6;
+            --primary-light: #E9EFFC;
+            --secondary-color: #F3F4F8;
+            --success-color: #3ECF4E;
+            --danger-color: #E31E1E;
+            --warning-color: #FFC107;
+            --text-primary: #1A1A1A;
+            --text-secondary: #8A8A8A;
+            --border-color: #E0E0E0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         * {
@@ -24,304 +28,1847 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--light-color);
-            color: var(--dark-color);
+            background-color: var(--secondary-color);
+            color: var(--text-primary);
             line-height: 1.6;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .admin-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
 
         /* --- Header --- */
         .admin-header {
             background-color: var(--primary-color);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .admin-header h1 { font-size: 1.5rem; font-weight: 600; }
-        .header-actions button { margin-left: 1rem; }
-
-        /* --- Main Layout --- */
-        .admin-container {
+        .admin-header h1 {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .add-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             display: flex;
-            min-height: calc(100vh - 70px);
-        }
-        .sidebar {
-            width: 250px;
-            background-color: white;
-            border-right: 1px solid var(--border-color);
-            padding: 1.5rem 0;
-        }
-        .sidebar-item {
-            display: block;
-            padding: 0.75rem 1.5rem;
-            color: var(--dark-color);
-            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
             transition: background-color 0.2s;
         }
-        .sidebar-item:hover, .sidebar-item.active {
+        .add-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        .screen {
+            display: none; /* Hide all screens by default */
+        }
+        .screen.active {
+            display: block; /* Show active screen */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Form Styles --- */
+        .form-container {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+        }
+        .form-container h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(13, 40, 166, 0.1);
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
             background-color: var(--primary-color);
             color: white;
         }
-        .main-content {
-            flex-grow: 1;
-            padding: 2rem;
+        .btn-primary:hover {
+            background-color: #0a1f7d;
+        }
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--text-primary);
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn-block {
+            width: 100%;
         }
 
-        /* --- Content Sections --- */
-        .content-section { display: none; }
-        .content-section.active { display: block; }
-        .section-header {
+        /* --- List Styles --- */
+        .list-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        .list-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-        .section-title { font-size: 1.75rem; font-weight: 600; }
-
-        /* --- Tables --- */
-        .data-table {
-            width: 100%;
-            background-color: white;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .data-table th, .data-table td {
-            padding: 0.75rem;
-            text-align: left;
+            padding: 1rem;
             border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
         }
-        .data-table th {
-            background-color: var(--light-color);
+        .list-title {
+            font-size: 1.1rem;
             font-weight: 600;
-            color: var(--dark-color);
-            white-space: nowrap;
         }
-        .data-table tbody tr:hover { background-color: #f1f3f5; }
-        .data-table .name-col { font-weight: 500; }
-        .data-table .status-col { font-size: 0.9rem; }
-        .data-table .amount-col { text-align: right; font-weight: 600; }
-        .data-table .action-col { white-space: nowrap; }
-        
-        /* --- Payment Cell --- */
-        .payment-cell {
-            text-align: center;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s;
+        .list-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
         }
-        .payment-cell.paid {
-            background-color: var(--success-color);
-            color: white;
-            font-weight: bold;
+        .list-item:last-child {
+            border-bottom: none;
         }
-        .payment-cell.unpaid {
-            background-color: #e9ecef;
-            color: #6c757d;
+        .list-item:hover {
+            background-color: var(--secondary-color);
         }
-        .payment-cell:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        }
-
-        /* --- Forms --- */
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-        }
-        .card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-        .form-group {
+        .list-item-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        .form-group input, .form-group select {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+        .list-item-title {
+            font-weight: 600;
             font-size: 1rem;
-        }
-
-        /* --- Buttons --- */
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 500;
+            color: var(--primary-color);
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
         }
-        .btn:hover { transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: var(--secondary-color); }
-        .btn-success { background-color: var(--success-color); color: white; }
-        .btn-success:hover { background-color: #218838; }
-        .btn-danger { background-color: var(--danger-color); color: white; }
-        .btn-danger:hover { background-color: #c82333; }
-        .btn-warning { background-color: var(--warning-color); color: var(--dark-color); }
-        .btn-warning:hover { background-color: #e0a800; }
-        .btn-secondary { background-color: #6c757d; color: white; }
-        .btn-secondary:hover { background-color: #5a6268; }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.875rem; }
+        .list-item-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+        .list-item-amount {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+        .list-item-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .list-item-actions .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
 
-        /* --- Save Button & Message --- */
-        .save-indicator {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 1000;
-        }
-        .message-toast {
-            position: fixed;
-            top: 90px;
-            right: 20px;
-            background-color: var(--dark-color);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1001;
-            opacity: 0;
-            transform: translateX(120%);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        .message-toast.show { opacity: 1; transform: translateX(0); }
-        .message-toast.success { background-color: var(--success-color); }
-        .message-toast.error { background-color: var(--danger-color); }
-        .message-toast.info { background-color: var(--primary-color); }
-
-        /* --- Settings Modal --- */
-        .modal-overlay {
+        /* --- Modal Styles --- */
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
             align-items: center;
-            z-index: 2000;
+            justify-content: center;
         }
-        .modal {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 90%;
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 95%;
             max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
         }
-        .modal-header { margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.5rem; font-weight: 600; }
-        .modal-footer { margin-top: 2rem; display: flex; justify-content: flex-end; gap: 0.5rem; }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .modal-body {
+            padding: 1.5rem;
+        }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* --- Status Message --- */
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .status-message.success {
+            background-color: rgba(62, 207, 78, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        .status-message.error {
+            background-color: rgba(227, 30, 30, 0.1);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        .status-message.show {
+            display: block;
+        }
+
+        /* --- Loading Spinner --- */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Payment Grid --- */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        .payment-month {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        .payment-month label {
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+        .payment-month input {
+            width: 100%;
+            padding: 0.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* --- Bottom Navigation --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 0.25rem;
+        }
+        .nav-item span {
+            font-size: 0.75rem;
+        }
+
+        /* --- Settings Section --- */
+        .settings-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1rem;
+        }
+        .settings-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .backup-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .backup-buttons .btn {
+            flex: 1;
+        }
+
+        /* --- Nota Grid --- */
+        .nota-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        .nota-item {
+            position: relative;
+            padding-bottom: 100%; /* 1:1 Aspect Ratio */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .nota-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.2s;
+        }
+        .nota-item:hover img {
+            transform: scale(1.05);
+        }
+        .nota-item-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+        }
+        .nota-item-actions button {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .nota-item-actions button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* --- Image Preview Modal --- */
+        .image-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-preview-modal.active {
+            display: flex;
+        }
+        .image-preview-container {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        .image-preview-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+        .image-preview-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* --- Upload Area --- */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .upload-area:hover {
+            border-color: var(--primary-color);
+        }
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .upload-text {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .upload-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .file-input {
+            display: none;
+        }
     </style>
 </head>
 <body>
-
-    <header class="admin-header">
-        <h1>🔧 Admin Panel - Kas Kelas</h1>
-        <div class="header-actions">
-            <button class="btn btn-warning" onclick="openSettingsModal()">⚙️ Pengaturan</button>
-            <button class="btn btn-danger" onclick="logout()">🚪 Keluar</button>
-        </div>
-    </header>
-
     <div class="admin-container">
-        <nav class="sidebar">
-            <a href="#" class="sidebar-item active" data-section="dashboard">📊 Dashboard</a>
-            <a href="#" class="sidebar-item" data-section="members">👥 Data Iuran</a>
-            <a href="#" class="sidebar-item" data-section="expenses">💸 Data Pengeluaran</a>
-        </nav>
+        <!-- Header -->
+        <header class="admin-header">
+            <h1 id="header-title">Admin Panel - Kas Kelas</h1>
+            <button id="add-button" class="add-button">+</button>
+        </header>
 
+        <!-- Status Message -->
+        <div id="status-message" class="status-message"></div>
+
+        <!-- Main Content -->
         <main class="main-content">
             
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="content-section active">
-                <div class="section-header">
-                    <h2 class="section-title">Ringkasan Keuangan</h2>
-                </div>
-                <div class="form-grid">
-                    <div class="card">
-                        <h3>Total Pemasukan</h3>
-                        <p style="font-size: 2rem; font-weight: bold; color: var(--success-color);" id="summary-income">Rp0</p>
+            <!-- Members Screen -->
+            <div id="members-screen" class="screen active">
+                <div class="list-container">
+                    <div class="list-header">
+                        <h2 class="list-title">Daftar Anggota</h2>
+                        <button id="refresh-members" class="btn btn-primary">Refresh</button>
                     </div>
-                    <div class="card">
-                        <h3>Total Pengeluaran</h3>
-                        <p style="font-size: 2rem; font-weight: bold; color: var(--danger-color);" id="summary-expense">Rp0</p>
-                    </div>
-                    <div class="card">
-                        <h3>Saldo Akhir</h3>
-                        <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color);" id="summary-balance">Rp0</p>
+                    <div id="members-list">
+                        <!-- Members will be loaded here -->
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Members Section -->
-            <section id="members" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Manajemen Data Iuran</h2>
+            <!-- Expenses Screen -->
+            <div id="expenses-screen" class="screen">
+                <div class="list-container">
+                    <div class="list-header">
+                        <h2 class="list-title">Daftar Pengeluaran</h2>
+                        <button id="refresh-expenses" class="btn btn-primary">Refresh</button>
+                    </div>
+                    <div id="expenses-list">
+                        <!-- Expenses will be loaded here -->
+                    </div>
                 </div>
-                <div class="card">
-                    <p>Klik pada sel bulan untuk mengubah status pembayaran (Lunas/Belum Lunas).</p>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table class="data-table" id="members-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Anggota</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Kurang</th>
-                                <th>Jul</th><th>Agu</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
-                                <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th>
-                            </tr>
-                        </thead>
-                        <tbody id="members-tbody">
-                            <!-- Rows will be generated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            </div>
 
-            <!-- Expenses Section -->
-            <section id="expenses" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Manajemen Data Pengeluaran</h2>
+            <!-- Nota Screen -->
+            <div id="nota-screen" class="screen">
+                <div class="list-container">
+                    <div class="list-header">
+                        <h2 class="list-title">Galeri Nota</h2>
+                        <button id="refresh-nota" class="btn btn-primary">Refresh</button>
+                    </div>
+                    <div id="nota-grid" class="nota-grid">
+                        <!-- Nota images will be loaded here -->
+                    </div>
                 </div>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settings-screen" class="screen">
+                <div class="settings-section">
+                    <h3>Pengaturan API GitHub</h3>
+                    <form id="settings-form">
+                        <div class="form-group">
+                            <label for="owner">Owner</label>
+                            <input type="text" id="owner" class="form-control" placeholder="Masukkan username GitHub">
+                        </div>
+                        <div class="form-group">
+                            <label for="repo">Repository</label>
+                            <input type="text" id="repo" class="form-control" placeholder="Masukkan nama repository">
+                        </div>
+                        <div class="form-group">
+                            <label for="token">Token</label>
+                            <input type="password" id="token" class="form-control" placeholder="Masukkan Personal Access Token">
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="button" id="test-connection" class="btn btn-success">Test</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Backup & Restore</h3>
+                    <p>Download backup data atau restore dari file backup</p>
+                    <div class="backup-buttons">
+                        <button id="download-backup" class="btn btn-primary">Download</button>
+                        <button id="upload-backup" class="btn btn-success">Upload</button>
+                        <input type="file" id="backup-file" style="display: none;" accept=".json">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-screen="members-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+                <span>Anggota</span>
+            </button>
+            <button class="nav-item" data-screen="expenses-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                <span>Pengeluaran</span>
+            </button>
+            <button class="nav-item" data-screen="nota-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                <span>Nota</span>
+            </button>
+            <button class="nav-item" data-screen="settings-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+                <span>Pengaturan</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="add-member-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tambah Anggota Baru</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-member-form">
+                    <div class="form-group">
+                        <label for="member-name">Nama Anggota</label>
+                        <input type="text" id="member-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pembayaran Bulanan</label>
+                        <div class="payment-grid">
+                            <div class="payment-month">
+                                <label for="juli">Juli</label>
+                                <input type="text" id="juli" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="agustus">Agustus</label>
+                                <input type="text" id="agustus" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="september">September</label>
+                                <input type="text" id="september" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="oktober">Oktober</label>
+                                <input type="text" id="oktober" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="november">November</label>
+                                <input type="text" id="november" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="desember">Desember</label>
+                                <input type="text" id="desember" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="januari">Januari</label>
+                                <input type="text" id="januari" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="februari">Februari</label>
+                                <input type="text" id="februari" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="maret">Maret</label>
+                                <input type="text" id="maret" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="april">April</label>
+                                <input type="text" id="april" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="mei">Mei</label>
+                                <input type="text" id="mei" class="form-control" placeholder="Rp0">
+                            </div>
+                            <div class="payment-month">
+                                <label for="juni">Juni</label>
+                                <input type="text" id="juni" class="form-control" placeholder="Rp0">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="save-new-member">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div id="add-expense-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tambah Pengeluaran Baru</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-expense-form">
+                    <div class="form-group">
+                        <label for="expense-date">Tanggal</label>
+                        <input type="date" id="expense-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-type">Jenis Pengeluaran</label>
+                        <input type="text" id="expense-type" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-amount">Jumlah</label>
+                        <input type="text" id="expense-amount" class="form-control" placeholder="Rp0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-description">Keterangan</label>
+                        <textarea id="expense-description" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="save-new-expense">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div id="edit-member-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Anggota</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-member-form">
+                    <input type="hidden" id="edit-member-index">
+                    <div class="form-group">
+                        <label for="edit-member-name">Nama Anggota</label>
+                        <input type="text" id="edit-member-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pembayaran Bulanan</label>
+                        <div class="payment-grid">
+                            <div class="payment-month">
+                                <label for="edit-juli">Juli</label>
+                                <input type="text" id="edit-juli" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-agustus">Agustus</label>
+                                <input type="text" id="edit-agustus" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-september">September</label>
+                                <input type="text" id="edit-september" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-oktober">Oktober</label>
+                                <input type="text" id="edit-oktober" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-november">November</label>
+                                <input type="text" id="edit-november" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-desember">Desember</label>
+                                <input type="text" id="edit-desember" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-januari">Januari</label>
+                                <input type="text" id="edit-januari" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-februari">Februari</label>
+                                <input type="text" id="edit-februari" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-maret">Maret</label>
+                                <input type="text" id="edit-maret" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-april">April</label>
+                                <input type="text" id="edit-april" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-mei">Mei</label>
+                                <input type="text" id="edit-mei" class="form-control">
+                            </div>
+                            <div class="payment-month">
+                                <label for="edit-juni">Juni</label>
+                                <input type="text" id="edit-juni" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="delete-member">Hapus</button>
+                <button class="btn btn-primary" id="save-member">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Expense Modal -->
+    <div id="edit-expense-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Pengeluaran</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-expense-form">
+                    <input type="hidden" id="edit-expense-index">
+                    <div class="form-group">
+                        <label for="edit-expense-date">Tanggal</label>
+                        <input type="date" id="edit-expense-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-expense-type">Jenis Pengeluaran</label>
+                        <input type="text" id="edit-expense-type" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-expense-amount">Jumlah</label>
+                        <input type="text" id="edit-expense-amount" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-expense-description">Keterangan</label>
+                        <textarea id="edit-expense-description" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="delete-expense">Hapus</button>
+                <button class="btn btn-primary" id="save-expense">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Nota Modal -->
+    <div id="upload-nota-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload Nota</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="upload-area" class="upload-area">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Seret dan lepas gambar nota di sini atau klik untuk memilih file</div>
+                    <button class="upload-button">Pilih File</button>
+                    <input type="file" id="nota-file-input" class="file-input" accept="image/*">
+                </div>
+                <div id="preview-container" style="display: none;">
+                    <img id="preview-image" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label for="nota-description">Deskripsi Nota</label>
+                        <input type="text" id="nota-description" class="form-control" placeholder="Masukkan deskripsi nota">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="upload-nota" style="display: none;">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="image-preview-modal" class="image-preview-modal">
+        <div class="image-preview-container">
+            <button class="image-preview-close">&times;</button>
+            <img id="preview-full-image" src="" alt="Nota Preview">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Configuration Management ---
+            let config = {
+                owner: '',
+                repo: '',
+                token: '',
+                apiUrl: 'https://api.github.com'
+            };
+
+            // Load config from localStorage
+            function loadConfigFromLocalStorage() {
+                const storedConfig = localStorage.getItem('kasKelasAdminConfig');
+                if (storedConfig) {
+                    config = JSON.parse(storedConfig);
+                    // Populate settings form
+                    document.getElementById('owner').value = config.owner || '';
+                    document.getElementById('repo').value = config.repo || '';
+                    document.getElementById('token').value = config.token || '';
+                }
+                return config;
+            }
+
+            // Save config to localStorage
+            function saveConfigToLocalStorage(newConfig) {
+                localStorage.setItem('kasKelasAdminConfig', JSON.stringify(newConfig));
+                config = newConfig;
+            }
+
+            // Check if config is complete
+            function isConfigValid() {
+                return config.owner && config.repo && config.token;
+            }
+
+            // --- State ---
+            let kasData = { members: [] };
+            let pengeluaranData = { expenses: [] };
+            let notaData = { images: [] };
+            let currentScreen = 'members-screen';
+
+            // --- Helper Functions ---
+            function parseRupiah(str) {
+                if (!str || str === "") return 0;
+                return parseInt(str.replace(/[^\d]/g, ''), 10);
+            }
+
+            function formatRupiah(num) {
+                return "Rp" + num.toLocaleString('id-ID');
+            }
+
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('id-ID', options);
+            }
+
+            function showStatus(message, type) {
+                const statusElement = document.getElementById('status-message');
+                statusElement.textContent = message;
+                statusElement.className = `status-message ${type} show`;
                 
-                <div class="card">
-                    <h3 class="card-title">Tambah Pengeluaran Baru</h3>
-                    <form id="add-expense-form" class="form-grid">
-                        <div class="form-group">
-                            <label for="new-expense-date">Tanggal</label>
-                            <input type="date" id="new-expense-date" required>
+                setTimeout(() => {
+                    statusElement.classList.remove('show');
+                }, 5000);
+            }
+
+            // --- GitHub API Functions ---
+            async function getFileContent(filePath) {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
+                    return null;
+                }
+
+                try {
+                    const response = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${filePath}`, {
+                        headers: {
+                            'Authorization': `token ${config.token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gagal mengambil file ${filePath}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    const content = atob(data.content);
+                    return JSON.parse(content);
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatus(error.message, 'error');
+                    return null;
+                }
+            }
+
+            async function updateFileContent(filePath, content, message) {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
+                    return null;
+                }
+
+                try {
+                    // Get current file info
+                    const response = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${filePath}`, {
+                        headers: {
+                            'Authorization': `token ${config.token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gagal mengambil info file ${filePath}: ${response.statusText}`);
+                    }
+
+                    const fileInfo = await response.json();
+                    
+                    // Update file
+                    const updateResponse = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${filePath}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            content: btoa(JSON.stringify(content, null, 2)),
+                            sha: fileInfo.sha
+                        })
+                    });
+
+                    if (!updateResponse.ok) {
+                        throw new Error(`Gagal memperbarui file ${filePath}: ${updateResponse.statusText}`);
+                    }
+
+                    return await updateResponse.json();
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatus(error.message, 'error');
+                    return null;
+                }
+            }
+
+            async function uploadImageToRepo(fileName, imageContent, description) {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
+                    return null;
+                }
+
+                try {
+                    // Create folder if it doesn't exist
+                    const folderPath = 'nota';
+                    
+                    // Upload image
+                    const uploadResponse = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${folderPath}/${fileName}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Upload nota: ${description || fileName}`,
+                            content: imageContent
+                        })
+                    });
+
+                    if (!uploadResponse.ok) {
+                        throw new Error(`Gagal mengupload gambar: ${uploadResponse.statusText}`);
+                    }
+
+                    const uploadData = await uploadResponse.json();
+                    
+                    // Update nota.json
+                    const newImage = {
+                        name: fileName,
+                        path: uploadData.content.path,
+                        url: uploadData.content.download_url,
+                        description: description || '',
+                        uploadDate: new Date().toISOString()
+                    };
+                    
+                    notaData.images.push(newImage);
+                    await updateFileContent('nota.json', notaData, 'Update nota list');
+                    
+                    return newImage;
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatus(error.message, 'error');
+                    return null;
+                }
+            }
+
+            async function deleteImageFromRepo(imagePath, imageIndex) {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
+                    return false;
+                }
+
+                try {
+                    // Get image info
+                    const response = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${imagePath}`, {
+                        headers: {
+                            'Authorization': `token ${config.token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gagal mengambil info gambar: ${response.statusText}`);
+                    }
+
+                    const imageInfo = await response.json();
+                    
+                    // Delete image
+                    const deleteResponse = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${imagePath}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Delete nota: ${imagePath}`,
+                            sha: imageInfo.sha
+                        })
+                    });
+
+                    if (!deleteResponse.ok) {
+                        throw new Error(`Gagal menghapus gambar: ${deleteResponse.statusText}`);
+                    }
+                    
+                    // Update nota.json
+                    notaData.images.splice(imageIndex, 1);
+                    await updateFileContent('nota.json', notaData, 'Update nota list after deletion');
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatus(error.message, 'error');
+                    return false;
+                }
+            }
+
+            // --- Load Data ---
+            async function loadData() {
+                if (!isConfigValid()) {
+                    showStatus('Silakan konfigurasi API GitHub di menu Pengaturan terlebih dahulu.', 'error');
+                    // Switch to settings screen
+                    document.querySelector('[data-screen="settings-screen"]').click();
+                    return;
+                }
+
+                const [kas, pengeluaran, nota] = await Promise.all([
+                    getFileContent('kas.json'),
+                    getFileContent('pengeluaran.json'),
+                    getFileContent('nota.json')
+                ]);
+
+                if (kas) kasData = kas;
+                if (pengeluaran) pengeluaranData = pengeluaran;
+                if (nota) notaData = nota;
+                
+                renderMembersList();
+                renderExpensesList();
+                renderNotaGrid();
+            }
+
+            // --- Render Functions ---
+            function renderMembersList() {
+                const listContainer = document.getElementById('members-list');
+                listContainer.innerHTML = '';
+
+                if (kasData.members.length === 0) {
+                    listContainer.innerHTML = '<div class="list-item">Belum ada data anggota</div>';
+                    return;
+                }
+
+                kasData.members.forEach((member, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-item';
+                    listItem.innerHTML = `
+                        <div class="list-item-header">
+                            <div>
+                                <div class="list-item-title" data-index="${index}">${member.nama}</div>
+                                <div class="list-item-subtitle">Kurang: ${member.kurang}</div>
+                            </div>
+                            <div class="list-item-amount">${member.total}</div>
                         </div>
-                        <div class="form-group">
-                            <label for="new-expense-desc">Keterangan</label>
-                            <input type="text" id="new-expense-desc" placeholder="Contoh: Beli ATK" required>
+                    `;
+                    listContainer.appendChild(listItem);
+                });
+
+                // Add event listeners to member names
+                document.querySelectorAll('.list-item-title').forEach(title => {
+                    title.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        openEditMemberModal(index);
+                    });
+                });
+            }
+
+            function renderExpensesList() {
+                const listContainer = document.getElementById('expenses-list');
+                listContainer.innerHTML = '';
+
+                if (pengeluaranData.expenses.length === 0) {
+                    listContainer.innerHTML = '<div class="list-item">Belum ada data pengeluaran</div>';
+                    return;
+                }
+
+                pengeluaranData.expenses.forEach((expense, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-item';
+                    listItem.innerHTML = `
+                        <div class="list-item-header">
+                            <div>
+                                <div class="list-item-title" data-index="${index}">${expense.jenis}</div>
+                                <div class="list-item-subtitle">${expense.tanggal}</div>
+                            </div>
+                            <div class="list-item-amount">${expense.jumlah}</div>
                         </div>
-                        <div class="form-group">
-                            <label for="new-expense-amount">Jumlah (Rp)</label>
-                            <input type="number" id="new-expense-amount" placeholder="Contoh: 50000" required>
+                    `;
+                    listContainer.appendChild(listItem);
+                });
+
+                // Add event listeners to expense types
+                document.querySelectorAll('.list-item-title').forEach(title => {
+                    title.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        openEditExpenseModal(index);
+                    });
+                });
+            }
+
+            function renderNotaGrid() {
+                const gridContainer = document.getElementById('nota-grid');
+                gridContainer.innerHTML = '';
+
+                if (notaData.images.length === 0) {
+                    gridContainer.innerHTML = '<div class="list-item">Belum ada nota</div>';
+                    return;
+                }
+
+                notaData.images.forEach((image, index) => {
+                    const notaItem = document.createElement('div');
+                    notaItem.className = 'nota-item';
+                    notaItem.innerHTML = `
+                        <img src="${image.url}" alt="${image.description || image.name}" data-index="${index}">
+                        <div class="nota-item-actions">
+                            <button class="view-image" data-index="${index}">👁️</button>
+                            <button class="delete-image" data-index="${index}">🗑️</button>
                         </div>
-                        <div class="form-group" style="justify-content: flex-end;">
-                            <button type="submit" class="btn btn-primary">Tambah Pengeluaran</button
+                    `;
+                    gridContainer.appendChild(notaItem);
+                });
+
+                // Add event listeners to image actions
+                document.querySelectorAll('.view-image').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        openImagePreview(index);
+                    });
+                });
+
+                document.querySelectorAll('.delete-image').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        if (confirm('Apakah Anda yakin ingin menghapus nota ini?')) {
+                            deleteImageFromRepo(notaData.images[index].path, index)
+                                .then(success => {
+                                    if (success) {
+                                        renderNotaGrid();
+                                        showStatus('Nota berhasil dihapus', 'success');
+                                    }
+                                });
+                        }
+                    });
+                });
+
+                // Add event listener to images for preview
+                document.querySelectorAll('.nota-item img').forEach(img => {
+                    img.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        openImagePreview(index);
+                    });
+                });
+            }
+
+            function openImagePreview(index) {
+                const image = notaData.images[index];
+                const modal = document.getElementById('image-preview-modal');
+                const previewImage = document.getElementById('preview-full-image');
+                
+                previewImage.src = image.url;
+                modal.classList.add('active');
+            }
+
+            // --- Member Functions ---
+            function calculateMemberTotal(member) {
+                const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                let total = 0;
+                
+                months.forEach(month => {
+                    if (member[month] && member[month].amount) {
+                        total += parseRupiah(member[month].amount);
+                    }
+                });
+                
+                return total;
+            }
+
+            function calculateMemberKurang(member, expectedTotal = 120000) {
+                const total = calculateMemberTotal(member);
+                const kurang = expectedTotal - total;
+                return kurang > 0 ? formatRupiah(kurang) : 'Rp0';
+            }
+
+            function openEditMemberModal(index) {
+                const member = kasData.members[index];
+                const modal = document.getElementById('edit-member-modal');
+                
+                document.getElementById('edit-member-index').value = index;
+                document.getElementById('edit-member-name').value = member.nama;
+                
+                const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                
+                months.forEach(month => {
+                    const input = document.getElementById(`edit-${month}`);
+                    if (member[month] && member[month].amount) {
+                        input.value = member[month].amount;
+                    } else {
+                        input.value = '';
+                    }
+                });
+                
+                modal.classList.add('active');
+            }
+
+            function closeEditMemberModal() {
+                document.getElementById('edit-member-modal').classList.remove('active');
+            }
+
+            function saveMember() {
+                const index = parseInt(document.getElementById('edit-member-index').value);
+                const member = kasData.members[index];
+                
+                member.nama = document.getElementById('edit-member-name').value;
+                
+                const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                const today = new Date().toISOString().split('T')[0];
+                
+                months.forEach(month => {
+                    const input = document.getElementById(`edit-${month}`);
+                    const value = input.value.trim();
+                    
+                    if (value) {
+                        if (!member[month]) {
+                            member[month] = {};
+                        }
+                        member[month].amount = value;
+                        member[month].date = today;
+                    } else if (member[month]) {
+                        delete member[month];
+                    }
+                });
+                
+                // Recalculate total and kurang
+                const total = calculateMemberTotal(member);
+                member.total = formatRupiah(total);
+                member.kurang = calculateMemberKurang(member);
+                
+                // Update data
+                updateFileContent('kas.json', kasData, `Update member ${member.nama}`)
+                    .then(() => {
+                        renderMembersList();
+                        closeEditMemberModal();
+                        showStatus('Data anggota berhasil diperbarui', 'success');
+                    })
+                    .catch(error => {
+                        showStatus(error.message, 'error');
+                    });
+            }
+
+            function deleteMember() {
+                const index = parseInt(document.getElementById('edit-member-index').value);
+                const member = kasData.members[index];
+                
+                if (confirm(`Apakah Anda yakin ingin menghapus ${member.nama}?`)) {
+                    kasData.members.splice(index, 1);
+                    
+                    updateFileContent('kas.json', kasData, `Delete member ${member.nama}`)
+                        .then(() => {
+                            renderMembersList();
+                            closeEditMemberModal();
+                            showStatus('Anggota berhasil dihapus', 'success');
+                        })
+                        .catch(error => {
+                            showStatus(error.message, 'error');
+                        });
+                }
+            }
+
+            // --- Expense Functions ---
+            function openEditExpenseModal(index) {
+                const expense = pengeluaranData.expenses[index];
+                const modal = document.getElementById('edit-expense-modal');
+                
+                document.getElementById('edit-expense-index').value = index;
+                
+                // Parse date from format "Senin, 1 Januari 2023"
+                const dateParts = expense.tanggal.split(', ');
+                const dayMonthYear = dateParts[1].split(' ');
+                const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const monthIndex = monthNames.indexOf(dayMonthYear[1]);
+                const day = dayMonthYear[0];
+                const year = dayMonthYear[2];
+                
+                const dateForInput = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                document.getElementById('edit-expense-date').value = dateForInput;
+                
+                document.getElementById('edit-expense-type').value = expense.jenis;
+                document.getElementById('edit-expense-amount').value = expense.jumlah;
+                document.getElementById('edit-expense-description').value = expense.keterangan || '';
+                
+                modal.classList.add('active');
+            }
+
+            function closeEditExpenseModal() {
+                document.getElementById('edit-expense-modal').classList.remove('active');
+            }
+
+            function saveExpense() {
+                const index = parseInt(document.getElementById('edit-expense-index').value);
+                const expense = pengeluaranData.expenses[index];
+                
+                const dateInput = document.getElementById('edit-expense-date').value;
+                const date = new Date(dateInput);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('id-ID', options);
+                
+                expense.tanggal = formattedDate;
+                expense.jenis = document.getElementById('edit-expense-type').value;
+                expense.jumlah = document.getElementById('edit-expense-amount').value;
+                expense.keterangan = document.getElementById('edit-expense-description').value;
+                
+                updateFileContent('pengeluaran.json', pengeluaranData, `Update expense ${expense.jenis}`)
+                    .then(() => {
+                        renderExpensesList();
+                        closeEditExpenseModal();
+                        showStatus('Data pengeluaran berhasil diperbarui', 'success');
+                    })
+                    .catch(error => {
+                        showStatus(error.message, 'error');
+                    });
+            }
+
+            function deleteExpense() {
+                const index = parseInt(document.getElementById('edit-expense-index').value);
+                const expense = pengeluaranData.expenses[index];
+                
+                if (confirm(`Apakah Anda yakin ingin menghapus pengeluaran "${expense.jenis}"?`)) {
+                    pengeluaranData.expenses.splice(index, 1);
+                    
+                    updateFileContent('pengeluaran.json', pengeluaranData, `Delete expense ${expense.jenis}`)
+                        .then(() => {
+                            renderExpensesList();
+                            closeEditExpenseModal();
+                            showStatus('Pengeluaran berhasil dihapus', 'success');
+                        })
+                        .catch(error => {
+                            showStatus(error.message, 'error');
+                        });
+                }
+            }
+
+            // --- Nota Functions ---
+            function openUploadNotaModal() {
+                const modal = document.getElementById('upload-nota-modal');
+                modal.classList.add('active');
+            }
+
+            function closeUploadNotaModal() {
+                const modal = document.getElementById('upload-nota-modal');
+                modal.classList.remove('active');
+                
+                // Reset form
+                document.getElementById('preview-container').style.display = 'none';
+                document.getElementById('upload-nota').style.display = 'none';
+                document.getElementById('nota-description').value = '';
+                document.getElementById('nota-file-input').value = '';
+            }
+
+            function handleFileSelect(file) {
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewImage = document.getElementById('preview-image');
+                        previewImage.src = e.target.result;
+                        
+                        document.getElementById('preview-container').style.display = 'block';
+                        document.getElementById('upload-nota').style.display = 'block';
+                    };
+                    
+                    reader.readAsDataURL(file);
+                } else {
+                    showStatus('Harap pilih file gambar', 'error');
+                }
+            }
+
+            function uploadNota() {
+                const fileInput = document.getElementById('nota-file-input');
+                const description = document.getElementById('nota-description').value;
+                
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    showStatus('Harap pilih file gambar', 'error');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const imageContent = e.target.result.split(',')[1]; // Remove data URL prefix
+                    const fileName = `nota_${new Date().getTime()}.${file.type.split('/')[1]}`;
+                    
+                    uploadImageToRepo(fileName, imageContent, description)
+                        .then(image => {
+                            if (image) {
+                                renderNotaGrid();
+                                closeUploadNotaModal();
+                                showStatus('Nota berhasil diupload', 'success');
+                            }
+                        });
+                };
+                
+                reader.readAsDataURL(file);
+            }
+
+            // --- Event Listeners ---
+            // Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            const screens = document.querySelectorAll('.screen');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetScreenId = item.dataset.screen;
+                    currentScreen = targetScreenId;
+
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    screens.forEach(screen => screen.classList.remove('active'));
+
+                    item.classList.add('active');
+                    document.getElementById(targetScreenId).classList.add('active');
+                    
+                    // Update header title
+                    const headerTitle = document.getElementById('header-title');
+                    if (targetScreenId === 'members-screen') {
+                        headerTitle.textContent = 'Data Anggota';
+                    } else if (targetScreenId === 'expenses-screen') {
+                        headerTitle.textContent = 'Data Pengeluaran';
+                    } else if (targetScreenId === 'nota-screen') {
+                        headerTitle.textContent = 'Galeri Nota';
+                    } else if (targetScreenId === 'settings-screen') {
+                        headerTitle.textContent = 'Pengaturan';
+                    }
+                });
+            });
+
+            // Add button
+            document.getElementById('add-button').addEventListener('click', function() {
+                if (!isConfigValid()) {
+                    showStatus('Silakan konfigurasi API GitHub terlebih dahulu', 'error');
+                    document.querySelector('[data-screen="settings-screen"]').click();
+                    return;
+                }
+
+                if (currentScreen === 'members-screen') {
+                    document.getElementById('add-member-modal').classList.add('active');
+                } else if (currentScreen === 'expenses-screen') {
+                    document.getElementById('add-expense-modal').classList.add('active');
+                } else if (currentScreen === 'nota-screen') {
+                    openUploadNotaModal();
+                }
+            });
+
+            // Add member form
+            document.getElementById('save-new-member').addEventListener('click', function() {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap', 'error');
+                    return;
+                }
+
+                const name = document.getElementById('member-name').value;
+                const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
+                const today = new Date().toISOString().split('T')[0];
+                
+                const newMember = {
+                    nama: name
+                };
+                
+                months.forEach(month => {
+                    const input = document.getElementById(month);
+                    const value = input.value.trim();
+                    
+                    if (value) {
+                        newMember[month] = {
+                            amount: value,
+                            date: today
+                        };
+                    }
+                });
+                
+                // Calculate total and kurang
+                const total = calculateMemberTotal(newMember);
+                newMember.total = formatRupiah(total);
+                newMember.kurang = calculateMemberKurang(newMember);
+                
+                kasData.members.push(newMember);
+                
+                updateFileContent('kas.json', kasData, `Add new member ${name}`)
+                    .then(() => {
+                        renderMembersList();
+                        document.getElementById('add-member-modal').classList.remove('active');
+                        document.getElementById('add-member-form').reset();
+                        showStatus('Anggota baru berhasil ditambahkan', 'success');
+                    })
+                    .catch(error => {
+                        showStatus(error.message, 'error');
+                    });
+            });
+
+            // Add expense form
+            document.getElementById('save-new-expense').addEventListener('click', function() {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap', 'error');
+                    return;
+                }
+
+                const dateInput = document.getElementById('expense-date').value;
+                const date = new Date(dateInput);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('id-ID', options);
+                
+                const newExpense = {
+                    tanggal: formattedDate,
+                    jenis: document.getElementById('expense-type').value,
+                    jumlah: document.getElementById('expense-amount').value,
+                    keterangan: document.getElementById('expense-description').value
+                };
+                
+                pengeluaranData.expenses.push(newExpense);
+                
+                updateFileContent('pengeluaran.json', pengeluaranData, `Add new expense ${newExpense.jenis}`)
+                    .then(() => {
+                        renderExpensesList();
+                        document.getElementById('add-expense-modal').classList.remove('active');
+                        document.getElementById('add-expense-form').reset();
+                        showStatus('Pengeluaran baru berhasil ditambahkan', 'success');
+                    })
+                    .catch(error => {
+                        showStatus(error.message, 'error');
+                    });
+            });
+
+            // Settings form
+            document.getElementById('settings-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newConfig = {
+                    owner: document.getElementById('owner').value,
+                    repo: document.getElementById('repo').value,
+                    token: document.getElementById('token').value,
+                    apiUrl: 'https://api.github.com'
+                };
+                
+                saveConfigToLocalStorage(newConfig);
+                showStatus('Pengaturan berhasil disimpan', 'success');
+            });
+
+            // Test connection
+            document.getElementById('test-connection').addEventListener('click', function() {
+                if (!isConfigValid()) {
+                    showStatus('Harap lengkapi semua field konfigurasi terlebih dahulu', 'error');
+                    return;
+                }
+
+                this.innerHTML = '<span class="spinner"></span> Testing...';
+                this.disabled = true;
+                
+                getFileContent('kas.json')
+                    .then(data => {
+                        if (data) {
+                            showStatus('Koneksi ke GitHub berhasil', 'success');
+                        } else {
+                            showStatus('Koneksi ke GitHub gagal', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showStatus(error.message, 'error');
+                    })
+                    .finally(() => {
+                        this.innerHTML = 'Test';
+                        this.disabled = false;
+                    });
+            });
+
+            // Refresh buttons
+            document.getElementById('refresh-members').addEventListener('click', function() {
+                this.innerHTML = '<span class="spinner"></span>';
+                this.disabled = true;
+                
+                loadData()
+                    .finally(() => {
+                        this.innerHTML = 'Refresh';
+                        this.disabled = false;
+                    });
+            });
+
+            document.getElementById('refresh-expenses').addEventListener('click', function() {
+                this.innerHTML = '<span class="spinner"></span>';
+                this.disabled = true;
+                
+                loadData()
+                    .finally(() => {
+                        this.innerHTML = 'Refresh';
+                        this.disabled = false;
+                    });
+            });
+
+            document.getElementById('refresh-nota').addEventListener('click', function() {
+                this.innerHTML = '<span class="spinner"></span>';
+                this.disabled = true;
+                
+                loadData()
+                    .finally(() => {
+                        this.innerHTML = 'Refresh';
+                        this.disabled = false;
+                    });
+            });
+
+            // Modal close buttons
+            document.querySelectorAll('.modal-close').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.modal').classList.remove('active');
+                });
+            });
+
+            // Image preview close button
+            document.querySelector('.image-preview-close').addEventListener('click', function() {
+                document.getElementById('image-preview-modal').classList.remove('active');
+            });
+
+            // Save member button
+            document.getElementById('save-member').addEventListener('click', saveMember);
+
+            // Delete member button
+            document.getElementById('delete-member').addEventListener('click', deleteMember);
+
+            // Save expense button
+            document.getElementById('save-expense').addEventListener('click', saveExpense);
+
+            // Delete expense button
+            document.getElementById('delete-expense').addEventListener('click', deleteExpense);
+
+            // Nota upload
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('nota-file-input');
+            const uploadButton = uploadArea.querySelector('.upload-button');
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            uploadButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    handleFileSelect(this.files[0]);
+                }
+            });
+
+            // Drag and drop for image upload
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+
+            document.getElementById('upload-nota').addEventListener('click', uploadNota);
+
+            // Download backup
+            document.getElementById('download-backup').addEventListener('click', function() {
+                const backupData = {
+                    kas: kasData,
+                    pengeluaran: pengeluaranData,
+                    nota: notaData,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const dataStr = JSON.stringify(backupData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `kas-backup-${new Date().toISOString().split('T')[0]}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                showStatus('Backup berhasil diunduh', 'success');
+            });
+
+            // Upload backup
+            document.getElementById('upload-backup').addEventListener('click', function() {
+                document.getElementById('backup-file').click();
+            });
+
+            document.getElementById('backup-file').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const backupData = JSON.parse(event.target.result);
+                        
+                        if (backupData.kas && backupData.pengeluaran) {
+                            if (confirm('Apakah Anda yakin ingin mengganti semua data dengan backup ini? Tindakan ini tidak dapat dibatalkan.')) {
+                                kasData = backupData.kas || { members: [] };
+                                pengeluaranData = backupData.pengeluaran || { expenses: [] };
+                                notaData = backupData.nota || { images: [] };
+                                
+                                Promise.all([
+                                    updateFileContent('kas.json', kasData, 'Restore from backup'),
+                                    updateFileContent('pengeluaran.json', pengeluaranData, 'Restore from backup'),
+                                    updateFileContent('nota.json', notaData, 'Restore from backup')
+                                ])
+                                .then(() => {
+                                    renderMembersList();
+                                    renderExpensesList();
+                                    renderNotaGrid();
+                                    showStatus('Data berhasil dipulihkan dari backup', 'success');
+                                })
+                                .catch(error => {
+                                    showStatus(error.message, 'error');
+                                });
+                            }
+                        } else {
+                            showStatus('Format file backup tidak valid', 'error');
+                        }
+                    } catch (error) {
+                        showStatus('Gagal membaca file backup: ' + error.message, 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+                e.target.value = ''; // Reset file input
+            });
+
+            // Initialize the app
+            loadConfigFromLocalStorage();
+            if (isConfigValid()) {
+                loadData();
+            } else {
+                showStatus('Silakan konfigurasi API GitHub di menu Pengaturan terlebih dahulu.', 'error');
+                document.querySelector('[data-screen="settings-screen"]').click();
+            }
+        });
+    </script>
+</body>
+</html>
