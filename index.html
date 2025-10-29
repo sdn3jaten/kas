@@ -710,7 +710,8 @@
                                     date: monthData.date,
                                     formattedDate: formatDate(monthData.date),
                                     description: member.nama,
-                                    amount: monthData.amount
+                                    amount: monthData.amount,
+                                    foto: member.foto || null
                                 });
                             }
                         });
@@ -755,10 +756,12 @@
                         const listItem = document.createElement('li');
                         listItem.className = 'history-item';
                         
-                        // Add expense photo if available
+                        // Add photo if available
                         let iconHTML = `<div class="history-icon ${type}">${type === 'income' ? '+' : '-'}</div>`;
-                        if (type === 'expense' && transaction.foto) {
+                        if (transaction.foto) {
                             iconHTML = `<img src="${transaction.foto}" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
+                        } else if (type === 'income') {
+                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
                         } else if (type === 'expense') {
                             iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
                         }
@@ -792,7 +795,8 @@
                                     date: monthData.date,
                                     formattedDate: formatDate(monthData.date),
                                     description: member.nama,
-                                    amount: monthData.amount
+                                    amount: monthData.amount,
+                                    foto: member.foto || null
                                 });
                             }
                         });
@@ -826,10 +830,12 @@
                         const listItem = document.createElement('li');
                         listItem.className = 'history-item';
                         
-                        // Add expense photo if available
+                        // Add photo if available
                         let iconHTML = `<div class="history-icon ${transaction.type}">${transaction.type === 'income' ? '+' : '-'}</div>`;
-                        if (transaction.type === 'expense' && transaction.foto) {
+                        if (transaction.foto) {
                             iconHTML = `<img src="${transaction.foto}" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
+                        } else if (transaction.type === 'income') {
+                            iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
                         } else if (transaction.type === 'expense') {
                             iconHTML = `<img src="https://picsum.photos/seed/${transaction.description}/100/100.jpg" alt="${transaction.description}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 1rem;">`;
                         }
