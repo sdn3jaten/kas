@@ -584,15 +584,27 @@
                 document.getElementById('settings-overlay').style.display = 'none';
             }
 
-            function saveSettings(e) {
+            // PERUBAAN PADA FUNGSI INI
+            async function saveSettings(e) {
                 e.preventDefault();
                 localStorage.setItem('github_owner', document.getElementById('setting-owner').value);
                 localStorage.setItem('github_repo', document.getElementById('setting-repo').value);
                 localStorage.setItem('github_token', document.getElementById('setting-token').value);
                 localStorage.setItem('github_branch', document.getElementById('setting-branch').value);
-                showMessage('Pengaturan berhasil disimpan! Halaman akan dimuat ulang.', 'success');
+                
+                showMessage('Pengaturan berhasil disimpan! Memuat data...', 'success');
                 closeSettingsModal();
-                setTimeout(() => { window.location.reload(); }, 1500);
+                
+                try {
+                    // Coba muat data dengan pengaturan baru, tanpa reload
+                    await loadData();
+                    showMessage('Data berhasil dimuat! Anda sekarang dapat mengedit data.', 'success');
+                } catch (error) {
+                    console.error('Error loading data after saving settings:', error);
+                    showMessage('Gagal memuat data. Periksa kembali token dan repository Anda.', 'error');
+                    // Buka kembali pengaturan jika pemuatan gagal
+                    openSettingsModal();
+                }
             }
 
             function clearSettings() {
@@ -609,7 +621,6 @@
             // --- DATA FETCHING AND INITIALIZATION ---
             async function loadData() {
                 try {
-                    // This will now throw an error if config is not complete
                     const [kas, pengeluaran] = await Promise.all([
                         GitHubAPI.getFile('kas.json'),
                         GitHubAPI.getFile('pengeluaran.json')
@@ -619,7 +630,6 @@
                     initializeApp();
                 } catch (error) {
                     console.error('Error loading data:', error);
-                    // If the error is about missing config, show the settings modal
                     if (error.message.includes('Konfigurasi API')) {
                         showMessage('Silakan lengkapi pengaturan API terlebih dahulu.', 'error');
                         openSettingsModal();
