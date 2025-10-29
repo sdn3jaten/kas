@@ -331,6 +331,69 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
+        /* --- NEW: Nota Grid Styles --- */
+        .nota-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        .nota-item {
+            position: relative;
+            padding-bottom: 100%; /* 1:1 Aspect Ratio */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .nota-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.2s;
+        }
+        .nota-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- Image Preview Modal --- */
+        .image-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-preview-modal.active {
+            display: flex;
+        }
+        .image-preview-container {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        .image-preview-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+        .image-preview-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
         /* --- Loading/Error Message --- */
         .message {
             text-align: center;
@@ -438,6 +501,14 @@
                 </div>
             </div>
 
+            <!-- NEW: Nota Screen -->
+            <div id="nota-screen" class="screen">
+                <h2 class="section-title">Galeri Nota</h2>
+                <div id="nota-grid" class="nota-grid">
+                    <!-- Nota images will be loaded here -->
+                </div>
+            </div>
+
         </main>
 
         <!-- Bottom Navigation -->
@@ -454,7 +525,19 @@
                 <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
                 <span>Riwayat</span>
             </button>
+            <button class="nav-item" data-screen="nota-screen">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                <span>Nota</span>
+            </button>
         </nav>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="image-preview-modal" class="image-preview-modal">
+        <div class="image-preview-container">
+            <button class="image-preview-close">&times;</button>
+            <img id="preview-full-image" src="" alt="Nota Preview">
+        </div>
     </div>
 
     <script>
@@ -693,6 +776,54 @@
                     });
                 }
 
+                // --- NEW: Nota Functions ---
+                async function loadNotaData() {
+                    try {
+                        const response = await fetch('https://api.github.com/repos/sdn3jaten/kas/contents/nota.json');
+                        if (!response.ok) {
+                            throw new Error('Gagal memuat data nota.');
+                        }
+                        const data = await response.json();
+                        const notaData = JSON.parse(atob(data.content));
+                        renderNotaGrid(notaData.images);
+                    } catch (error) {
+                        console.error('Error loading nota data:', error);
+                        document.getElementById('nota-grid').innerHTML = '<div class="message">Gagal memuat nota. Pastikan file nota.json ada di repository.</div>';
+                    }
+                }
+
+                function renderNotaGrid(images) {
+                    const gridContainer = document.getElementById('nota-grid');
+                    gridContainer.innerHTML = '';
+
+                    if (images.length === 0) {
+                        gridContainer.innerHTML = '<div class="message">Belum ada nota.</div>';
+                        return;
+                    }
+
+                    images.forEach((image, index) => {
+                        const notaItem = document.createElement('div');
+                        notaItem.className = 'nota-item';
+                        notaItem.innerHTML = `<img src="${image.url}" alt="${image.description || image.name}" data-index="${index}">`;
+                        gridContainer.appendChild(notaItem);
+                    });
+
+                    // Add event listener to images for preview
+                    document.querySelectorAll('.nota-item img').forEach(img => {
+                        img.addEventListener('click', function() {
+                            openImagePreview(this.src);
+                        });
+                    });
+                }
+
+                function openImagePreview(imageSrc) {
+                    const modal = document.getElementById('image-preview-modal');
+                    const previewImage = document.getElementById('preview-full-image');
+                    
+                    previewImage.src = imageSrc;
+                    modal.classList.add('active');
+                }
+
                 // --- NAVIGATION LOGIC ---
                 const navItems = document.querySelectorAll('.nav-item');
                 const screens = document.querySelectorAll('.screen');
@@ -706,6 +837,11 @@
 
                         item.classList.add('active');
                         document.getElementById(targetScreenId).classList.add('active');
+
+                        // Load nota data only when the nota screen is opened
+                        if (targetScreenId === 'nota-screen' && document.getElementById('nota-grid').children.length === 0) {
+                            loadNotaData();
+                        }
                     });
                 });
 
@@ -729,6 +865,11 @@
                         button.classList.add('active');
                         document.getElementById(`${targetTab}-list`).classList.add('active');
                     });
+                });
+
+                // Image preview close button
+                document.querySelector('.image-preview-close').addEventListener('click', function() {
+                    document.getElementById('image-preview-modal').classList.remove('active');
                 });
 
                 // --- INITIALIZE APP COMPONENTS ---
