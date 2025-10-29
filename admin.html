@@ -191,6 +191,7 @@
             padding: 1rem;
             border-bottom: 1px solid var(--border-color);
             transition: background-color 0.2s;
+            position: relative;
         }
         .list-item:last-child {
             border-bottom: none;
@@ -523,6 +524,38 @@
         .file-input {
             display: none;
         }
+
+        /* --- Profile Photo --- */
+        .profile-photo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .profile-photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid var(--border-color);
+        }
+        .profile-photo-info {
+            flex-grow: 1;
+        }
+        .profile-photo-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .change-photo-btn {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -648,6 +681,17 @@
                         <label for="member-name">Nama Anggota</label>
                         <input type="text" id="member-name" class="form-control" required>
                     </div>
+                    
+                    <!-- Profile Photo Upload -->
+                    <div class="profile-photo-container">
+                        <img id="member-photo-preview" class="profile-photo-preview" src="https://picsum.photos/seed/default/100/100.jpg" alt="Profile Photo">
+                        <div class="profile-photo-info">
+                            <div class="profile-photo-label">Foto Profil</div>
+                            <button type="button" id="change-member-photo-btn" class="change-photo-btn">Ganti Foto</button>
+                            <input type="file" id="member-photo-input" class="file-input" accept="image/*">
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Pembayaran Bulanan</label>
                         <div class="payment-grid">
@@ -734,6 +778,16 @@
                         <label for="expense-description">Keterangan</label>
                         <textarea id="expense-description" class="form-control" rows="3"></textarea>
                     </div>
+                    
+                    <!-- Expense Photo Upload -->
+                    <div class="profile-photo-container">
+                        <img id="expense-photo-preview" class="profile-photo-preview" src="https://picsum.photos/seed/default/100/100.jpg" alt="Expense Photo">
+                        <div class="profile-photo-info">
+                            <div class="profile-photo-label">Foto Pengeluaran</div>
+                            <button type="button" id="change-expense-photo-btn" class="change-photo-btn">Ganti Foto</button>
+                            <input type="file" id="expense-photo-input" class="file-input" accept="image/*">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -756,6 +810,17 @@
                         <label for="edit-member-name">Nama Anggota</label>
                         <input type="text" id="edit-member-name" class="form-control" required>
                     </div>
+                    
+                    <!-- Profile Photo Upload -->
+                    <div class="profile-photo-container">
+                        <img id="edit-member-photo-preview" class="profile-photo-preview" src="https://picsum.photos/seed/default/100/100.jpg" alt="Profile Photo">
+                        <div class="profile-photo-info">
+                            <div class="profile-photo-label">Foto Profil</div>
+                            <button type="button" id="change-edit-member-photo-btn" class="change-photo-btn">Ganti Foto</button>
+                            <input type="file" id="edit-member-photo-input" class="file-input" accept="image/*">
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Pembayaran Bulanan</label>
                         <div class="payment-grid">
@@ -844,6 +909,16 @@
                         <label for="edit-expense-description">Keterangan</label>
                         <textarea id="edit-expense-description" class="form-control" rows="3"></textarea>
                     </div>
+                    
+                    <!-- Expense Photo Upload -->
+                    <div class="profile-photo-container">
+                        <img id="edit-expense-photo-preview" class="profile-photo-preview" src="https://picsum.photos/seed/default/100/100.jpg" alt="Expense Photo">
+                        <div class="profile-photo-info">
+                            <div class="profile-photo-label">Foto Pengeluaran</div>
+                            <button type="button" id="change-edit-expense-photo-btn" class="change-photo-btn">Ganti Foto</button>
+                            <input type="file" id="edit-expense-photo-input" class="file-input" accept="image/*">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -928,6 +1003,12 @@
             let pengeluaranData = { expenses: [] };
             let notaData = { images: [] };
             let currentScreen = 'members-screen';
+            
+            // Photo states
+            let memberPhotoData = null;
+            let editMemberPhotoData = null;
+            let expensePhotoData = null;
+            let editExpensePhotoData = null;
 
             // --- Helper Functions ---
             function parseRupiah(str) {
@@ -1087,6 +1168,46 @@
                 }
             }
 
+            async function uploadProfileImage(imageContent, fileName) {
+                if (!isConfigValid()) {
+                    showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
+                    return null;
+                }
+
+                try {
+                    const folderPath = 'foto';
+                    
+                    // Upload image
+                    const uploadResponse = await fetch(`${config.apiUrl}/repos/${config.owner}/${config.repo}/contents/${folderPath}/${fileName}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Upload profile image: ${fileName}`,
+                            content: imageContent
+                        })
+                    });
+
+                    if (!uploadResponse.ok) {
+                        const errorData = await uploadResponse.json();
+                        let errorMessage = `Gagal mengupload gambar profil: ${uploadResponse.statusText}`;
+                        if (errorData.message) {
+                            errorMessage = `Gagal mengupload gambar profil: ${errorData.message}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+
+                    const uploadData = await uploadResponse.json();
+                    return uploadData.content.download_url;
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatus(error.message, 'error');
+                    return null;
+                }
+            }
+
             async function deleteImageFromRepo(imagePath, imageIndex) {
                 if (!isConfigValid()) {
                     showStatus('Konfigurasi API tidak lengkap. Silakan atur di menu Pengaturan.', 'error');
@@ -1179,15 +1300,14 @@
                         <div class="list-item-header">
                             <div>
                                 <div class="list-item-title" data-index="${index}">${member.nama}</div>
-                                <div class="list-item-subtitle">Kurang: ${member.kurang}</div>
+                                <div class="list-item-subtitle">Total: ${member.total} | Kurang: ${member.kurang}</div>
                             </div>
-                            <div class="list-item-amount">${member.total}</div>
                         </div>
                     `;
                     listContainer.appendChild(listItem);
                 });
 
-                // FIX: Add event listeners to member names within the correct container
+                // Add event listeners to member names
                 listContainer.querySelectorAll('.list-item-title').forEach(title => {
                     title.addEventListener('click', function() {
                         const index = parseInt(this.getAttribute('data-index'));
@@ -1212,15 +1332,14 @@
                         <div class="list-item-header">
                             <div>
                                 <div class="list-item-title" data-index="${index}">${expense.jenis}</div>
-                                <div class="list-item-subtitle">${expense.tanggal}</div>
+                                <div class="list-item-subtitle">${expense.tanggal} | ${expense.jumlah}</div>
                             </div>
-                            <div class="list-item-amount">${expense.jumlah}</div>
                         </div>
                     `;
                     listContainer.appendChild(listItem);
                 });
 
-                // FIX: Add event listeners to expense types within the correct container
+                // Add event listeners to expense types
                 listContainer.querySelectorAll('.list-item-title').forEach(title => {
                     title.addEventListener('click', function() {
                         const index = parseInt(this.getAttribute('data-index'));
@@ -1319,6 +1438,14 @@
                 document.getElementById('edit-member-index').value = index;
                 document.getElementById('edit-member-name').value = member.nama;
                 
+                // Set profile photo
+                const photoPreview = document.getElementById('edit-member-photo-preview');
+                if (member.foto) {
+                    photoPreview.src = member.foto;
+                } else {
+                    photoPreview.src = `https://picsum.photos/seed/${member.nama}/100/100.jpg`;
+                }
+                
                 const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
                 
                 months.forEach(month => {
@@ -1342,6 +1469,18 @@
                 const member = kasData.members[index];
                 
                 member.nama = document.getElementById('edit-member-name').value;
+                
+                // Save profile photo if changed
+                if (editMemberPhotoData) {
+                    const fileName = `profile_${member.nama.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
+                    uploadProfileImage(editMemberPhotoData, fileName)
+                        .then(photoUrl => {
+                            if (photoUrl) {
+                                member.foto = photoUrl;
+                                renderMembersList();
+                            }
+                        });
+                }
                 
                 const months = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
                 const today = new Date().toISOString().split('T')[0];
@@ -1419,6 +1558,14 @@
                 document.getElementById('edit-expense-amount').value = expense.jumlah;
                 document.getElementById('edit-expense-description').value = expense.keterangan || '';
                 
+                // Set expense photo
+                const photoPreview = document.getElementById('edit-expense-photo-preview');
+                if (expense.foto) {
+                    photoPreview.src = expense.foto;
+                } else {
+                    photoPreview.src = `https://picsum.photos/seed/${expense.jenis}/100/100.jpg`;
+                }
+                
                 modal.classList.add('active');
             }
 
@@ -1439,6 +1586,18 @@
                 expense.jenis = document.getElementById('edit-expense-type').value;
                 expense.jumlah = document.getElementById('edit-expense-amount').value;
                 expense.keterangan = document.getElementById('edit-expense-description').value;
+                
+                // Save expense photo if changed
+                if (editExpensePhotoData) {
+                    const fileName = `expense_${expense.jenis.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
+                    uploadProfileImage(editExpensePhotoData, fileName)
+                        .then(photoUrl => {
+                            if (photoUrl) {
+                                expense.foto = photoUrl;
+                                renderExpensesList();
+                            }
+                        });
+                }
                 
                 updateFileContent('pengeluaran.json', pengeluaranData, `Update expense ${expense.jenis}`)
                     .then(() => {
@@ -1534,6 +1693,33 @@
                 reader.readAsDataURL(file);
             }
 
+            // --- Photo Upload Functions ---
+            function setupPhotoUpload(inputId, previewId, buttonId, dataVariable) {
+                const input = document.getElementById(inputId);
+                const preview = document.getElementById(previewId);
+                const button = document.getElementById(buttonId);
+                
+                button.addEventListener('click', function() {
+                    input.click();
+                });
+                
+                input.addEventListener('change', function() {
+                    if (this.files && this.files.length > 0) {
+                        const file = this.files[0];
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            if (dataVariable !== undefined) {
+                                window[dataVariable] = e.target.result.split(',')[1];
+                            }
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
             // --- Event Listeners ---
             // Navigation
             const navItems = document.querySelectorAll('.nav-item');
@@ -1596,35 +1782,57 @@
                     nama: name
                 };
                 
-                months.forEach(month => {
-                    const input = document.getElementById(month);
-                    const value = input.value.trim();
-                    
-                    if (value) {
-                        newMember[month] = {
-                            amount: value,
-                            date: today
-                        };
-                    }
-                });
+                // Save profile photo if uploaded
+                if (memberPhotoData) {
+                    const fileName = `profile_${name.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
+                    uploadProfileImage(memberPhotoData, fileName)
+                        .then(photoUrl => {
+                            if (photoUrl) {
+                                newMember.foto = photoUrl;
+                                // Continue with saving member data
+                                saveMemberData();
+                            }
+                        });
+                } else {
+                    // Use placeholder photo
+                    newMember.foto = `https://picsum.photos/seed/${name}/100/100.jpg`;
+                    saveMemberData();
+                }
                 
-                // Calculate total and kurang
-                const total = calculateMemberTotal(newMember);
-                newMember.total = formatRupiah(total);
-                newMember.kurang = calculateMemberKurang(newMember);
-                
-                kasData.members.push(newMember);
-                
-                updateFileContent('kas.json', kasData, `Add new member ${name}`)
-                    .then(() => {
-                        renderMembersList();
-                        document.getElementById('add-member-modal').classList.remove('active');
-                        document.getElementById('add-member-form').reset();
-                        showStatus('Anggota baru berhasil ditambahkan', 'success');
-                    })
-                    .catch(error => {
-                        showStatus(error.message, 'error');
+                function saveMemberData() {
+                    months.forEach(month => {
+                        const input = document.getElementById(month);
+                        const value = input.value.trim();
+                        
+                        if (value) {
+                            newMember[month] = {
+                                amount: value,
+                                date: today
+                            };
+                        }
                     });
+                    
+                    // Calculate total and kurang
+                    const total = calculateMemberTotal(newMember);
+                    newMember.total = formatRupiah(total);
+                    newMember.kurang = calculateMemberKurang(newMember);
+                    
+                    kasData.members.push(newMember);
+                    
+                    updateFileContent('kas.json', kasData, `Add new member ${name}`)
+                        .then(() => {
+                            renderMembersList();
+                            document.getElementById('add-member-modal').classList.remove('active');
+                            document.getElementById('add-member-form').reset();
+                            // Reset photo preview
+                            document.getElementById('member-photo-preview').src = 'https://picsum.photos/seed/default/100/100.jpg';
+                            memberPhotoData = null;
+                            showStatus('Anggota baru berhasil ditambahkan', 'success');
+                        })
+                        .catch(error => {
+                            showStatus(error.message, 'error');
+                        });
+                }
             });
 
             // Add expense form
@@ -1646,18 +1854,40 @@
                     keterangan: document.getElementById('expense-description').value
                 };
                 
-                pengeluaranData.expenses.push(newExpense);
+                // Save expense photo if uploaded
+                if (expensePhotoData) {
+                    const fileName = `expense_${newExpense.jenis.replace(/\s+/g, '_')}_${new Date().getTime()}.jpg`;
+                    uploadProfileImage(expensePhotoData, fileName)
+                        .then(photoUrl => {
+                            if (photoUrl) {
+                                newExpense.foto = photoUrl;
+                                // Continue with saving expense data
+                                saveExpenseData();
+                            }
+                        });
+                } else {
+                    // Use placeholder photo
+                    newExpense.foto = `https://picsum.photos/seed/${newExpense.jenis}/100/100.jpg`;
+                    saveExpenseData();
+                }
                 
-                updateFileContent('pengeluaran.json', pengeluaranData, `Add new expense ${newExpense.jenis}`)
-                    .then(() => {
-                        renderExpensesList();
-                        document.getElementById('add-expense-modal').classList.remove('active');
-                        document.getElementById('add-expense-form').reset();
-                        showStatus('Pengeluaran baru berhasil ditambahkan', 'success');
-                    })
-                    .catch(error => {
-                        showStatus(error.message, 'error');
-                    });
+                function saveExpenseData() {
+                    pengeluaranData.expenses.push(newExpense);
+                    
+                    updateFileContent('pengeluaran.json', pengeluaranData, `Add new expense ${newExpense.jenis}`)
+                        .then(() => {
+                            renderExpensesList();
+                            document.getElementById('add-expense-modal').classList.remove('active');
+                            document.getElementById('add-expense-form').reset();
+                            // Reset photo preview
+                            document.getElementById('expense-photo-preview').src = 'https://picsum.photos/seed/default/100/100.jpg';
+                            expensePhotoData = null;
+                            showStatus('Pengeluaran baru berhasil ditambahkan', 'success');
+                        })
+                        .catch(error => {
+                            showStatus(error.message, 'error');
+                        });
+                }
             });
 
             // Settings form
@@ -1801,6 +2031,12 @@
             });
 
             document.getElementById('upload-nota').addEventListener('click', uploadNota);
+
+            // Setup photo uploads
+            setupPhotoUpload('member-photo-input', 'member-photo-preview', 'change-member-photo-btn', 'memberPhotoData');
+            setupPhotoUpload('edit-member-photo-input', 'edit-member-photo-preview', 'change-edit-member-photo-btn', 'editMemberPhotoData');
+            setupPhotoUpload('expense-photo-input', 'expense-photo-preview', 'change-expense-photo-btn', 'expensePhotoData');
+            setupPhotoUpload('edit-expense-photo-input', 'edit-expense-photo-preview', 'change-edit-expense-photo-btn', 'editExpensePhotoData');
 
             // Download backup
             document.getElementById('download-backup').addEventListener('click', function() {
